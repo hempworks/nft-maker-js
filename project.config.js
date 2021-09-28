@@ -12,7 +12,7 @@ module.exports = {
     },
   ],
 
-  editionSize: 128,
+  editionSize: 1,
 
   uniques: [
     {
@@ -22,20 +22,7 @@ module.exports = {
   ],
 
   traits: [
-    {
-      name: 'Background',
-      items: [
-        { name: 'Black', weight: 10 },
-        { name: 'White', weight: 20 },
-      ],
-    },
-
-    {
-      name: 'Foreground',
-      items: [
-        { name: 'White', weight: 10 },
-        { name: 'Black', weight: 20 },
-      ],
-    },
+    { Background: [{ Black: 10 }, { White: 20 }] },
+    { Foreground: [{ White: 10 }, { Black: 20 }] },
   ],
 }
