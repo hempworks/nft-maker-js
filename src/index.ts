@@ -1,50 +1,62 @@
-// import chalk from 'chalk'
-import times from 'lodash/times'
-import map from 'lodash/map'
-import transform from 'lodash/transform'
-import reduce from 'lodash/reduce'
+import { times, map, transform, reduce, find, sumBy } from 'lodash'
+
+interface TraitCategory {
+  name: string
+  items: Array<Trait>
+}
 
 interface Trait {
   name: string
   weight: number
 }
 
-// Load the configuration file provided by the user...
-let { traits: t, uniques, editionSize } = require('../project.config.js')
-const traits: Array<Trait> = t
+interface Attribute {
+  [name: string]: any
+}
 
-let imageData = times(editionSize, () => {
-  return createNewUniqueImage()
-})
+let { traits: t, uniques, editionSize } = require('../project.config.js')
+
+const traits: Array<TraitCategory> = t
+
+let imageData: Array<Attribute> = times(editionSize, () =>
+  createNewUniqueImage()
+)
 
 console.log(imageData)
 
-function createNewUniqueImage() {
+function createNewUniqueImage(): Attribute {
   return createNewImage()
 }
 
-function createNewImage() {
-  return transform(traits, (result, { name }, key) => {
-    return [name, getRandomTrait(name)]
+function createNewImage(): Attribute {
+  return map(traits, ({ name }) => {
+    return { [name]: getRandomWeightedTrait(name) }
   })
 }
 
-function getRandomTrait(trait: string) {
-  // return traits[trait]
-  return getRandomWeightedElement(trait)
-}
+function getRandomWeightedTrait(traitName: string): string {
+  const category: TraitCategory | undefined = find(
+    traits,
+    (t: TraitCategory) => t.name == traitName
+  )
 
-function getRandomWeightedElement(trait: string) {
-  // const items: Trait = traits[trait as any]
-  // const sum = reduce(items, i => i.weight)
-  console.log(traits[trait])
-  // var cumul = 100
-  // var random = Math.floor(Math.random() * 100)
-  //
-  // for (var i = 0; i < items.length; i++) {
-  //   cumul -= items[i].weight
-  //   if (random >= cumul) {
-  //     return items[i]
-  //   }
-  // }
+  if (!category) {
+    throw new Error(`There is no category named [${traitName}]!`)
+  }
+
+  const items = category.items
+
+  let sum: number = sumBy(category.items, (i: Trait) => i.weight)
+  const threshold: number = Math.random() * sum
+
+  let total = 0
+  for (let i = 0; i < items.length; i++) {
+    total += items[i].weight
+
+    if (total >= threshold) {
+      return items[i].name
+    }
+  }
+
+  return items[items.length - 1].name
 }
