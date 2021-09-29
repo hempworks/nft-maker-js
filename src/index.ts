@@ -1,15 +1,17 @@
-import { times, map, transform, reduce, find, sumBy } from 'lodash'
-import { TraitCategory, Trait, Attribute } from './defs'
-import { createNewUniqueImage } from './lib'
-import { writeFileSync } from 'fs'
+#!/usr/bin/env node
 
-let { traits: t, uniques, editionSize } = require('../project.config.js')
-const traits: Array<TraitCategory> = t
+import yargs from 'yargs'
+import { hideBin } from 'yargs/helpers'
 
-let imageData: Array<Attribute> = times(editionSize, () =>
-  createNewUniqueImage(traits)
-)
-
-let manifest = JSON.stringify(imageData, null, 2)
-
-writeFileSync('/manifest.json', manifest)
+yargs(hideBin(process.argv))
+  .commandDir('commands')
+  .command(
+    '$0',
+    'NFT Maker CLI usage',
+    () => undefined,
+    () => yargs.showHelp()
+  )
+  .strict()
+  .alias({ h: 'help' })
+  .epilogue('For more information, check https://twitter.com/davidhemphill')
+  .argv
