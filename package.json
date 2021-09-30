@@ -6,7 +6,7 @@
     "nft-maker": "./build/index.js"
   },
   "scripts": {
-    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "start": "nodemon --watch src --exec 'tsc' -e ts",
     "create": "npm run build && npm run test",
     "build": "tsc",
     "package": "pkg . --targets node14-macos-x64 --output nft-maker",

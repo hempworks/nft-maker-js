@@ -1,7 +1,10 @@
+import chalk from 'chalk'
+import path from 'path'
+import fs from 'fs'
+import { log } from '../util'
 import { times } from 'lodash'
 import { Attribute } from '../defs'
 import { createNewUniqueImage } from '../lib'
-import { writeFile } from 'fs'
 import type { Arguments, CommandBuilder } from 'yargs'
 
 type Options = {
@@ -16,26 +19,26 @@ export const builder: CommandBuilder<Options> = yargs =>
 
 export const handler = (argv: Arguments<Options>): void => {
   const { amount } = argv
-  process.stdout.write(`Generating NFT manifest with ${amount} items...`)
 
-  let { traits, editionSize } = require(`${__dirname}/../../project.config.js`)
+  let configLocation = path.resolve('./project.config.js')
+
+  if (!fs.existsSync(configLocation)) {
+    log(chalk.red('There is no project.config.js in this folder.'))
+    process.exit(1)
+  }
+
+  const { traits, editionSize } = require(configLocation)
+
+  log(chalk.blue(`Generating NFT manifest with ${amount} items...`))
 
   let imageData: Array<Attribute> = times(editionSize, () =>
     createNewUniqueImage(traits)
   )
 
-  writeFile(
-    './manifest.json',
-    JSON.stringify(imageData, null, 2),
-    {
-      flag: 'wx',
-    },
-    err => {
-      if (err) throw err
+  fs.writeFileSync('./manifest.json', JSON.stringify(imageData, null, 2), {
+    flag: 'w',
+  })
 
-      console.log('It already exists!')
-    }
-  )
-
+  log(chalk.green(`Finished generating NFT manifest.`))
   process.exit(0)
 }
