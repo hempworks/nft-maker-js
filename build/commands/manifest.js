@@ -16,14 +16,17 @@ const builder = yargs => yargs.positional('amount', { type: 'string', demandOpti
 exports.builder = builder;
 const handler = (argv) => {
     const { amount } = argv;
+    (0, util_1.log)(chalk_1.default.blue(`Generating NFT manifest with ${amount} items...`));
     let configLocation = path_1.default.resolve('./project.config.js');
     if (!fs_1.default.existsSync(configLocation)) {
         (0, util_1.log)(chalk_1.default.red('There is no project.config.js in this folder.'));
         process.exit(1);
     }
     const { traits, editionSize } = require(configLocation);
-    (0, util_1.log)(chalk_1.default.blue(`Generating NFT manifest with ${amount} items...`));
     let imageData = (0, lodash_1.times)(editionSize, () => (0, lib_1.createNewUniqueImage)(traits));
+    // Pull in the uniques...
+    // Shuffle the deck a couple of times...
+    // Assign token IDs...
     fs_1.default.writeFileSync('./manifest.json', JSON.stringify(imageData, null, 2), {
         flag: 'w',
     });

@@ -20,6 +20,8 @@ export const builder: CommandBuilder<Options> = yargs =>
 export const handler = (argv: Arguments<Options>): void => {
   const { amount } = argv
 
+  log(chalk.blue(`Generating NFT manifest with ${amount} items...`))
+
   let configLocation = path.resolve('./project.config.js')
 
   if (!fs.existsSync(configLocation)) {
@@ -29,11 +31,15 @@ export const handler = (argv: Arguments<Options>): void => {
 
   const { traits, editionSize } = require(configLocation)
 
-  log(chalk.blue(`Generating NFT manifest with ${amount} items...`))
-
   let imageData: Array<Attribute> = times(editionSize, () =>
     createNewUniqueImage(traits)
   )
+
+  // Pull in the uniques...
+
+  // Shuffle the deck a couple of times...
+
+  // Assign token IDs...
 
   fs.writeFileSync('./manifest.json', JSON.stringify(imageData, null, 2), {
     flag: 'w',
