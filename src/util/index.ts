@@ -10,7 +10,7 @@ export function error(msg: string) {
   return console.error(chalk.red(msg))
 }
 
-export function info(msg: string) {
+export function info(msg: string): any {
   return console.log(msg)
 }
 
