@@ -9,6 +9,12 @@ let imageData: any = []
 export default function handle() {
   info('Generating NFT manifest...')
 
+  let assetsDir = './assets'
+
+  if (fs.existsSync(assetsDir)) {
+    fs.rmdirSync(assetsDir, { recursive: true })
+  }
+
   const { traits, uniques, editionSize } = resolveConfiguration()
 
   uniques.forEach((u: object) => imageData.push(u))
@@ -17,7 +23,7 @@ export default function handle() {
     imageData.push(createNewUniqueImage(traits))
   )
 
-  shuffle(imageData)
+  imageData = shuffle(imageData)
 
   // Check compatibility
 

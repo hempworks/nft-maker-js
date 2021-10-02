@@ -18,6 +18,7 @@ function handle() {
         fs_1.default.writeFileSync(`./assets/${fileNumber}.json`, JSON.stringify(token, null, 2), {
             flag: 'w',
         });
+        (0, util_1.info)(`Generated '/assets/${fileNumber}.json'`);
     });
 }
 exports.default = handle;

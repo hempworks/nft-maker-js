@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import chalk from 'chalk'
-import { TraitCategory } from '../defs'
+import { TraitCategory } from './defs'
 
 export function info(msg: string): any {
   return console.info(msg)

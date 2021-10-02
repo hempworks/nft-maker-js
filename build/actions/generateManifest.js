@@ -10,14 +10,15 @@ const lib_1 = require("../lib");
 let imageData = [];
 function handle() {
     (0, util_1.info)('Generating NFT manifest...');
-    const { traits, editionSize } = (0, util_1.resolveConfiguration)();
-    (0, lodash_1.times)(editionSize, () => {
-        imageData.push(createNewUniqueImage(traits));
-    });
-    // Pull in the uniques...
-    // Shuffle the deck a couple of times...
+    let assetsDir = './assets';
+    if (fs_1.default.existsSync(assetsDir)) {
+        fs_1.default.rmdirSync(assetsDir, { recursive: true });
+    }
+    const { traits, uniques, editionSize } = (0, util_1.resolveConfiguration)();
+    uniques.forEach((u) => imageData.push(u));
+    (0, lodash_1.times)(editionSize - uniques.length, () => imageData.push(createNewUniqueImage(traits)));
+    imageData = (0, lodash_1.shuffle)(imageData);
     // Check compatibility
-    // Make sure it's unique
     // Assign token IDs...
     imageData = imageData.map((item, key) => {
         item['tokenId'] = key + 1;

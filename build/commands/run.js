@@ -7,12 +7,14 @@ exports.handler = exports.desc = exports.command = void 0;
 const generateManifest_1 = __importDefault(require("../actions/generateManifest"));
 const generateStats_1 = __importDefault(require("../actions/generateStats"));
 const generateMetadata_1 = __importDefault(require("../actions/generateMetadata"));
+const generateImages_1 = __importDefault(require("../actions/generateImages"));
 exports.command = 'run';
 exports.desc = 'Run the generator';
 const handler = (argv) => {
     (0, generateManifest_1.default)();
     (0, generateStats_1.default)();
     (0, generateMetadata_1.default)();
+    (0, generateImages_1.default)();
     process.exit(0);
 };
 exports.handler = handler;

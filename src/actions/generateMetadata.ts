@@ -1,5 +1,6 @@
 import { Attribute, TraitCategory } from '../defs'
 import {
+  info,
   resolveConfiguration,
   resolveManifest,
   shouldIncludeTrait,
@@ -27,6 +28,8 @@ export default function handle() {
         flag: 'w',
       }
     )
+
+    info(`Generated '/assets/${fileNumber}.json'`)
   })
 }
 

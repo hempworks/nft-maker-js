@@ -1,5 +1,5 @@
 import { find, reduce, sumBy } from 'lodash'
-import { TraitCategory, Trait } from '../defs'
+import { TraitCategory, Trait } from './defs'
 
 export function getRandomWeightedTrait(
   traits: Array<TraitCategory>,
