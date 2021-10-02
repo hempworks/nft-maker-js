@@ -1,28 +1,28 @@
 import fs from 'fs'
 import { info, resolveConfiguration, success } from '../util'
-import { Attribute } from '../defs'
-import { times } from 'lodash'
-import { createNewUniqueImage } from '../lib'
+import { reduce, shuffle, times } from 'lodash'
+import { getRandomWeightedTrait } from '../lib'
+import { TraitCategory } from '../defs'
+
+let imageData: any = []
 
 export default function handle() {
   info('Generating NFT manifest...')
 
-  const { traits, editionSize } = resolveConfiguration()
+  const { traits, uniques, editionSize } = resolveConfiguration()
 
-  let imageData: Array<Attribute> = times(editionSize, () =>
-    createNewUniqueImage(traits)
+  uniques.forEach((u: object) => imageData.push(u))
+
+  times(editionSize - uniques.length, () =>
+    imageData.push(createNewUniqueImage(traits))
   )
 
-  // Pull in the uniques...
-
-  // Shuffle the deck a couple of times...
+  shuffle(imageData)
 
   // Check compatibility
 
-  // Make sure it's unique
-
   // Assign token IDs...
-  imageData = imageData.map((item, key) => {
+  imageData = imageData.map((item: any, key: number) => {
     item['tokenId'] = key + 1
     return item
   })
@@ -32,4 +32,27 @@ export default function handle() {
   })
 
   success('Finished generating NFT manifest!')
+}
+
+function createNewUniqueImage(traits: Array<TraitCategory>): object {
+  let newImage = createNewImage(traits)
+
+  if (imageData.includes(newImage)) {
+    return createNewUniqueImage(traits)
+  }
+
+  return newImage
+}
+
+function createNewImage(traits: Array<TraitCategory>) {
+  return reduce(
+    traits,
+    (carry, { name }) => {
+      return {
+        ...carry,
+        ...{ [name]: getRandomWeightedTrait(traits, name) },
+      }
+    },
+    {}
+  )
 }

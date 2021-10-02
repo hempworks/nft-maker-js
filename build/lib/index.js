@@ -1,19 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createNewUniqueImage = void 0;
+exports.getRandomWeightedTrait = void 0;
 const lodash_1 = require("lodash");
-function createNewUniqueImage(traits) {
-    return createNewImage(traits);
-}
-exports.createNewUniqueImage = createNewUniqueImage;
-function createNewImage(traits) {
-    return (0, lodash_1.reduce)(traits, (carry, { name }) => {
-        return {
-            ...carry,
-            ...{ [name]: getRandomWeightedTrait(traits, name) },
-        };
-    }, {});
-}
 function getRandomWeightedTrait(traits, traitName) {
     const category = (0, lodash_1.find)(traits, (t) => t.name == traitName);
     if (!category) {
@@ -31,3 +19,4 @@ function getRandomWeightedTrait(traits, traitName) {
     }
     return items[items.length - 1].name;
 }
+exports.getRandomWeightedTrait = getRandomWeightedTrait;

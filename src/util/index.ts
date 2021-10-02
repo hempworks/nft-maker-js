@@ -12,6 +12,10 @@ export function fail(msg: string) {
   process.exit(1)
 }
 
+export function warn(msg: string) {
+  console.warn(chalk.yellow(msg))
+}
+
 export function success(msg: string) {
   info(chalk.bgGreen.white(msg))
 }

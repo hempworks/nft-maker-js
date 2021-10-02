@@ -12,8 +12,3 @@ export interface Attribute {
   tokenId: string
   [name: string]: any
 }
-
-export interface TokenAttribute {
-  trait_type: string
-  value: string
-}

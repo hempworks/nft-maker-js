@@ -1,24 +1,7 @@
 import { find, reduce, sumBy } from 'lodash'
 import { TraitCategory, Trait } from '../defs'
 
-export function createNewUniqueImage(traits: Array<TraitCategory>) {
-  return createNewImage(traits)
-}
-
-function createNewImage(traits: Array<TraitCategory>) {
-  return reduce(
-    traits,
-    (carry, { name }) => {
-      return {
-        ...carry,
-        ...{ [name]: getRandomWeightedTrait(traits, name) },
-      }
-    },
-    {}
-  )
-}
-
-function getRandomWeightedTrait(
+export function getRandomWeightedTrait(
   traits: Array<TraitCategory>,
   traitName: string
 ): string {
