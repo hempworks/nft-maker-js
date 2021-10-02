@@ -3,20 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mapWithKeys = exports.resolveManifest = exports.resolveConfiguration = exports.fail = exports.info = exports.error = exports.log = void 0;
+exports.shouldIncludeTrait = exports.mapWithKeys = exports.resolveManifest = exports.resolveConfiguration = exports.success = exports.fail = exports.info = void 0;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const chalk_1 = __importDefault(require("chalk"));
-function log(msg) {
-    return console.log(msg);
-}
-exports.log = log;
-function error(msg) {
-    return console.error(chalk_1.default.red(msg));
-}
-exports.error = error;
 function info(msg) {
-    return console.log(msg);
+    return console.info(msg);
 }
 exports.info = info;
 function fail(msg) {
@@ -24,8 +16,12 @@ function fail(msg) {
     process.exit(1);
 }
 exports.fail = fail;
+function success(msg) {
+    info(chalk_1.default.bgGreen.white(msg));
+}
+exports.success = success;
 function resolveConfiguration() {
-    let configLocation = path_1.default.resolve('./project.config.js');
+    let configLocation = path_1.default.resolve('./config.js');
     return fs_1.default.existsSync(configLocation)
         ? require(configLocation)
         : fail('Could not find the project configuration.');
@@ -44,3 +40,9 @@ function mapWithKeys(myObject, iterator) {
     });
 }
 exports.mapWithKeys = mapWithKeys;
+function shouldIncludeTrait(trait) {
+    return resolveConfiguration()
+        .traits.map((t) => t.name)
+        .includes(trait);
+}
+exports.shouldIncludeTrait = shouldIncludeTrait;

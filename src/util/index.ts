@@ -1,17 +1,10 @@
 import path from 'path'
 import fs from 'fs'
 import chalk from 'chalk'
-
-export function log(msg: string) {
-  return console.log(msg)
-}
-
-export function error(msg: string) {
-  return console.error(chalk.red(msg))
-}
+import { TraitCategory } from '../defs'
 
 export function info(msg: string): any {
-  return console.log(msg)
+  return console.info(msg)
 }
 
 export function fail(msg: string) {
@@ -19,8 +12,12 @@ export function fail(msg: string) {
   process.exit(1)
 }
 
+export function success(msg: string) {
+  info(chalk.bgGreen.white(msg))
+}
+
 export function resolveConfiguration() {
-  let configLocation = path.resolve('./project.config.js')
+  let configLocation = path.resolve('./config.js')
 
   return fs.existsSync(configLocation)
     ? require(configLocation)
@@ -39,4 +36,10 @@ export function mapWithKeys(myObject: any, iterator: Function) {
   return Object.keys(myObject).map((key, index) => {
     return iterator(key, index)
   })
+}
+
+export function shouldIncludeTrait(trait: string) {
+  return resolveConfiguration()
+    .traits.map((t: TraitCategory) => t.name)
+    .includes(trait)
 }
