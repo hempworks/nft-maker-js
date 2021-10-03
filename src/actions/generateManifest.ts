@@ -6,7 +6,7 @@ import { TraitCategory } from '../defs'
 
 let imageData: any = []
 
-export default function handle() {
+export default function () {
   info('Generating NFT manifest...')
 
   let assetsDir = './assets'

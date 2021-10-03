@@ -10,7 +10,7 @@ import fs from 'fs'
 const manifest = resolveManifest()
 const config = resolveConfiguration()
 
-export default function handle() {
+export default function () {
   manifest.forEach((item: Attribute) => {
     const { tokenId } = item as any
     const fileNumber = tokenId - 1
@@ -36,7 +36,7 @@ export default function handle() {
 function createToken(number: number, item: Attribute) {
   const token = {
     name: `${config.name} #${number}`,
-    symbol: '',
+    symbol: config.symbol ?? '',
     description: config.description,
     seller_fee_basis_points: config.sellerFeeBasisPoints,
     image: 'image.png',

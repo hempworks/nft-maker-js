@@ -24,6 +24,7 @@
     "processing"
   ],
   "dependencies": {
+    "@types/sharp": "^0.29.2",
     "chalk": "^4.1.2",
     "clear": "^0.1.0",
     "cosmiconfig": "^7.0.1",

@@ -8,7 +8,7 @@ import {
 import { Trait, TraitCategory } from '../defs'
 import fs from 'fs'
 
-export default function handle() {
+export default function () {
   info('Generating NFT trait statistics...')
 
   const config = resolveConfiguration()

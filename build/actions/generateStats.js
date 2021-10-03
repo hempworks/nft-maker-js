@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = require("../util");
 const fs_1 = __importDefault(require("fs"));
-function handle() {
+function default_1() {
     (0, util_1.info)('Generating NFT trait statistics...');
     const config = (0, util_1.resolveConfiguration)();
     const manifest = (0, util_1.resolveManifest)();
@@ -42,4 +42,4 @@ function handle() {
     });
     (0, util_1.success)('Finished generating NFT trait statistics.');
 }
-exports.default = handle;
+exports.default = default_1;

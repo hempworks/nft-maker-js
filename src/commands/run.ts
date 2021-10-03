@@ -1,8 +1,10 @@
 import type { Arguments } from 'yargs'
-import generateManifest from '../actions/generateManifest'
-import generateStats from '../actions/generateStats'
-import generateMetadata from '../actions/generateMetadata'
-import generateImages from '../actions/generateImages'
+import {
+  generateManifest,
+  generateStats,
+  generateMetadata,
+  generateImages,
+} from '../actions'
 
 export const command: string = 'run'
 export const desc: string = 'Run the generator'

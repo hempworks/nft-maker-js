@@ -8,7 +8,7 @@ const util_1 = require("../util");
 const lodash_1 = require("lodash");
 const lib_1 = require("../lib");
 let imageData = [];
-function handle() {
+function default_1() {
     (0, util_1.info)('Generating NFT manifest...');
     let assetsDir = './assets';
     if (fs_1.default.existsSync(assetsDir)) {
@@ -29,7 +29,7 @@ function handle() {
     });
     (0, util_1.success)('Finished generating NFT manifest!');
 }
-exports.default = handle;
+exports.default = default_1;
 function createNewUniqueImage(traits) {
     let newImage = createNewImage(traits);
     if (imageData.includes(newImage)) {

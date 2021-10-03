@@ -7,7 +7,7 @@ const util_1 = require("../util");
 const fs_1 = __importDefault(require("fs"));
 const manifest = (0, util_1.resolveManifest)();
 const config = (0, util_1.resolveConfiguration)();
-function handle() {
+function default_1() {
     manifest.forEach((item) => {
         const { tokenId } = item;
         const fileNumber = tokenId - 1;
@@ -21,11 +21,11 @@ function handle() {
         (0, util_1.info)(`Generated '/assets/${fileNumber}.json'`);
     });
 }
-exports.default = handle;
+exports.default = default_1;
 function createToken(number, item) {
     const token = {
         name: `${config.name} #${number}`,
-        symbol: '',
+        symbol: config.symbol ?? '',
         description: config.description,
         seller_fee_basis_points: config.sellerFeeBasisPoints,
         image: 'image.png',

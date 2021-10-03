@@ -1,4 +1,4 @@
-import { find, reduce, sumBy } from 'lodash'
+import { find, sumBy } from 'lodash'
 import { TraitCategory, Trait } from './defs'
 
 export function getRandomWeightedTrait(
@@ -16,8 +16,8 @@ export function getRandomWeightedTrait(
 
   const items = category.items
 
-  let sum: number = sumBy(category.items, (i: Trait) => i.weight)
-  const threshold: number = Math.random() * sum
+  let sum = sumBy(category.items, (i: Trait) => i.weight)
+  const threshold = Math.random() * sum
 
   let total = 0
   for (let i = 0; i < items.length; i++) {
