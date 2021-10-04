@@ -31,10 +31,13 @@ function default_1() {
 }
 exports.default = default_1;
 function createNewUniqueImage(traits) {
+    let attempts = 0;
     let newImage = createNewImage(traits);
     if (imageData.includes(newImage)) {
+        attempts++;
         return createNewUniqueImage(traits);
     }
+    attempts = 0;
     return newImage;
 }
 function createNewImage(traits) {

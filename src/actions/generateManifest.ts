@@ -41,11 +41,15 @@ export default function () {
 }
 
 function createNewUniqueImage(traits: Array<TraitCategory>): object {
+  let attempts = 0
   let newImage = createNewImage(traits)
 
   if (imageData.includes(newImage)) {
+    attempts++
     return createNewUniqueImage(traits)
   }
+
+  attempts = 0
 
   return newImage
 }

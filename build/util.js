@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.shouldIncludeTrait = exports.mapWithKeys = exports.resolveManifest = exports.resolveConfiguration = exports.success = exports.warn = exports.fail = exports.info = void 0;
+exports.shouldIncludeTrait = exports.resolveManifest = exports.resolveConfiguration = exports.success = exports.fail = exports.info = void 0;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const chalk_1 = __importDefault(require("chalk"));
@@ -16,10 +16,6 @@ function fail(msg) {
     process.exit(1);
 }
 exports.fail = fail;
-function warn(msg) {
-    console.warn(chalk_1.default.yellow(msg));
-}
-exports.warn = warn;
 function success(msg) {
     info(chalk_1.default.bgGreen.white(msg));
 }
@@ -38,12 +34,6 @@ function resolveManifest() {
         : fail('Could not find the project manifest.');
 }
 exports.resolveManifest = resolveManifest;
-function mapWithKeys(myObject, iterator) {
-    return Object.keys(myObject).map((key, index) => {
-        return iterator(key, index);
-    });
-}
-exports.mapWithKeys = mapWithKeys;
 function shouldIncludeTrait(trait) {
     return resolveConfiguration()
         .traits.map((t) => t.name)

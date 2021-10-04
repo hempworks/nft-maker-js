@@ -12,10 +12,6 @@ export function fail(msg: string) {
   process.exit(1)
 }
 
-export function warn(msg: string) {
-  console.warn(chalk.yellow(msg))
-}
-
 export function success(msg: string) {
   info(chalk.bgGreen.white(msg))
 }
@@ -34,12 +30,6 @@ export function resolveManifest() {
   return fs.existsSync(manifestLocation)
     ? require(manifestLocation)
     : fail('Could not find the project manifest.')
-}
-
-export function mapWithKeys(myObject: any, iterator: Function) {
-  return Object.keys(myObject).map((key, index) => {
-    return iterator(key, index)
-  })
 }
 
 export function shouldIncludeTrait(trait: string) {

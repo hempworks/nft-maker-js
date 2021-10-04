@@ -1,5 +1,5 @@
 import type { Arguments } from 'yargs'
-import generateManifest from '../actions/generateManifest'
+import { generateManifest } from '../actions'
 
 export const command: string = 'manifest'
 export const desc: string = 'Generate an NFT configuration manifest'

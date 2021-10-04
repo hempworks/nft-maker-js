@@ -9,6 +9,5 @@ export interface Trait {
 }
 
 export interface Attribute {
-  tokenId: string
   [name: string]: any
 }

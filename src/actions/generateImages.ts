@@ -1,11 +1,15 @@
 import sharp from 'sharp'
 import { resolveManifest, shouldIncludeTrait } from '../util'
+import { Attribute } from '../defs'
+import path from 'path'
+import { info, fail } from '../util'
 
 export default function () {
+  info('Generating NFT images...')
   const manifest = resolveManifest()
 
-  manifest.map((item: object, key: number) => {
-    let image = sharp({
+  manifest.forEach((item: Attribute, key: number) => {
+    const image = sharp({
       create: {
         width: 2000,
         height: 2000,
@@ -14,16 +18,24 @@ export default function () {
       },
     })
 
-    Object.keys(item).forEach(key => {
-      // console.log(shouldIncludeTrait(key))
-      // if (shouldIncludeTrait(key)) {
-      let imageName = `./traits/${key}.png`
-      image = image.composite([{ input: imageName, gravity: 'center' }])
-      // }
-    })
+    image.composite(
+      Object.keys(item)
+        .filter((key: string) => shouldIncludeTrait(key))
+        .map((key: string) => ({
+          input: path.resolve(`./traits/${key}/${item[key]}.png`),
+          gravity: 'center',
+        }))
+    )
 
-    image.toFile(`./assets/${key}.png`, function (err) {
-      console.log('error: ', err)
-    })
+    image
+      .toFile(path.resolve(`./assets/${key}.png`))
+      .then(() => {
+        info(`Generated ${path.resolve(`./assets/${key}.png`)}`)
+      })
+      .catch(err => {
+        fail(`Failed to generate ${path.resolve(`./assets/${key}.png`)}`)
+      })
   })
+
+  info('Finished generating NFT images!')
 }
