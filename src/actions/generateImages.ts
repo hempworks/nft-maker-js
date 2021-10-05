@@ -1,41 +1,54 @@
 import sharp from 'sharp'
 import { resolveManifest, shouldIncludeTrait } from '../util'
-import { Attribute } from '../defs'
 import path from 'path'
-import { info, fail } from '../util'
+import { fail } from '../util'
 
-export default function () {
-  info('Generating NFT images...')
+function createImage() {
+  return sharp({
+    create: {
+      width: 2000,
+      height: 2000,
+      channels: 4,
+      background: { r: 255, g: 255, b: 255, alpha: 0 },
+    },
+  })
+}
+
+function compositeImage(image, item: any) {
+  image.composite(
+    Object.keys(item)
+      .filter((key: string) => shouldIncludeTrait(key))
+      .map((key: string) => ({
+        input: path.resolve(`./traits/${key}/${item[key]}.png`),
+        gravity: 'center',
+      }))
+  )
+}
+
+export default async function (
+  task: null | {
+    title: string
+    output: string
+  }
+): Promise<void> {
   const manifest = resolveManifest()
 
-  manifest.forEach((item: Attribute, key: number) => {
-    const image = sharp({
-      create: {
-        width: 2000,
-        height: 2000,
-        channels: 4,
-        background: { r: 255, g: 255, b: 255, alpha: 0 },
-      },
-    })
+  for (const item of manifest) {
+    const key: number = manifest.indexOf(item)
+    const filePath = `./assets/${key}.png`
 
-    image.composite(
-      Object.keys(item)
-        .filter((key: string) => shouldIncludeTrait(key))
-        .map((key: string) => ({
-          input: path.resolve(`./traits/${key}/${item[key]}.png`),
-          gravity: 'center',
-        }))
-    )
+    if (task) {
+      task.output = `Creating image at '${filePath}'`
+    }
 
-    image
-      .toFile(path.resolve(`./assets/${key}.png`))
-      .then(() => {
-        info(`Generated ${path.resolve(`./assets/${key}.png`)}`)
-      })
-      .catch(err => {
-        fail(`Failed to generate ${path.resolve(`./assets/${key}.png`)}`)
-      })
-  })
+    const image = createImage()
 
-  info('Finished generating NFT images!')
+    compositeImage(image, item)
+
+    try {
+      await image.toFile(filePath)
+    } catch (err) {
+      fail(`Failed to generate ${filePath}`)
+    }
+  }
 }

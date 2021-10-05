@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = require("../util");
 const fs_1 = __importDefault(require("fs"));
 function default_1() {
-    (0, util_1.info)('Generating NFT trait statistics...');
     const config = (0, util_1.resolveConfiguration)();
     const manifest = (0, util_1.resolveManifest)();
     const { traits: t } = config;
@@ -40,6 +39,5 @@ function default_1() {
     fs_1.default.writeFileSync('./stats.json', JSON.stringify(counts, null, 2), {
         flag: 'w',
     });
-    (0, util_1.success)('Finished generating NFT trait statistics.');
 }
 exports.default = default_1;

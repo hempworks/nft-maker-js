@@ -7,8 +7,6 @@ import { TraitCategory } from '../defs'
 let imageData: any = []
 
 export default function () {
-  info('Generating NFT manifest...')
-
   let assetsDir = './assets'
 
   if (fs.existsSync(assetsDir)) {
@@ -36,8 +34,6 @@ export default function () {
   fs.writeFileSync('./manifest.json', JSON.stringify(imageData, null, 2), {
     flag: 'w',
   })
-
-  success('Finished generating NFT manifest!')
 }
 
 function createNewUniqueImage(traits: Array<TraitCategory>): object {

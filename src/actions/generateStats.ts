@@ -9,8 +9,6 @@ import { Trait, TraitCategory } from '../defs'
 import fs from 'fs'
 
 export default function () {
-  info('Generating NFT trait statistics...')
-
   const config = resolveConfiguration()
   const manifest = resolveManifest()
   const { traits: t } = config
@@ -47,6 +45,4 @@ export default function () {
   fs.writeFileSync('./stats.json', JSON.stringify(counts, null, 2), {
     flag: 'w',
   })
-
-  success('Finished generating NFT trait statistics.')
 }

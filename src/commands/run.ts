@@ -1,4 +1,5 @@
-import type { Arguments } from 'yargs'
+import { Listr } from 'listr2'
+
 import {
   generateManifest,
   generateStats,
@@ -9,11 +10,36 @@ import {
 export const command: string = 'run'
 export const desc: string = 'Run the generator'
 
-export const handler = (argv: Arguments): void => {
-  generateManifest()
-  generateStats()
-  generateMetadata()
-  generateImages()
+const tasks = new Listr([
+  {
+    title: 'Generate Manifest',
+    task: () => generateManifest(),
+  },
+  {
+    title: 'Generate Stats',
+    task: () => generateStats(),
+  },
+  {
+    title: 'Generate Metadata',
+    task: async (ctx, task): Promise<void> => {
+      await generateMetadata(task)
+    },
+  },
+  {
+    title: 'Generate Images',
+    task: async (ctx, task): Promise<void> => {
+      await generateImages(task)
+    },
+  },
+])
 
-  process.exit(0)
+export const handler = (): void => {
+  tasks
+    .run()
+    .catch(err => {
+      console.error(err)
+    })
+    .finally(() => {
+      process.exit(0)
+    })
 }

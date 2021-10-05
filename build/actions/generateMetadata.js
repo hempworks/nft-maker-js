@@ -5,21 +5,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = require("../util");
 const fs_1 = __importDefault(require("fs"));
+const delay_1 = __importDefault(require("delay"));
+const lodash_1 = require("lodash");
 const manifest = (0, util_1.resolveManifest)();
 const config = (0, util_1.resolveConfiguration)();
-function default_1() {
-    manifest.forEach((item) => {
+async function default_1(task) {
+    // Generate assets folder...
+    if (task) {
+        task.output = 'Generating assets folder...';
+    }
+    if (!fs_1.default.existsSync('./assets')) {
+        fs_1.default.mkdirSync('./assets');
+    }
+    // Generate asset metadata...
+    for (const item of manifest) {
         const { tokenId } = item;
         const fileNumber = tokenId - 1;
-        const token = createToken(tokenId, item);
-        if (!fs_1.default.existsSync('./assets')) {
-            fs_1.default.mkdirSync('./assets');
-        }
-        fs_1.default.writeFileSync(`./assets/${fileNumber}.json`, JSON.stringify(token, null, 2), {
-            flag: 'w',
+        let filePath = `./assets/${fileNumber}.json`;
+        (0, lodash_1.tap)(createToken(tokenId, item), token => {
+            if (task) {
+                task.output = `Generating asset metadata '${filePath}'`;
+            }
+            fs_1.default.writeFileSync(filePath, JSON.stringify(token, null, 2), { flag: 'w' });
         });
-        (0, util_1.info)(`Generated '/assets/${fileNumber}.json'`);
-    });
+        await (0, delay_1.default)(10);
+    }
 }
 exports.default = default_1;
 function createToken(number, item) {

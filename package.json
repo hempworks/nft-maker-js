@@ -25,16 +25,21 @@
   ],
   "dependencies": {
     "@types/sharp": "^0.29.2",
+    "@types/zen-observable": "^0.8.3",
     "chalk": "^4.1.2",
     "clear": "^0.1.0",
     "cosmiconfig": "^7.0.1",
+    "delay": "^5.0.0",
     "figlet": "^1.5.2",
     "glob": "^7.2.0",
+    "listr2": "^3.12.2",
     "lodash": "^4.17.21",
     "path": "^0.12.7",
     "pkg": "^5.3.2",
+    "rxjs": "^7.3.1",
     "sharp": "^0.29.1",
-    "yargs": "^17.2.1"
+    "yargs": "^17.2.1",
+    "zen-observable": "^0.8.15"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.174",

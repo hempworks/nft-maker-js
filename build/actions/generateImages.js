@@ -7,33 +7,40 @@ const sharp_1 = __importDefault(require("sharp"));
 const util_1 = require("../util");
 const path_1 = __importDefault(require("path"));
 const util_2 = require("../util");
-function default_1() {
-    (0, util_2.info)('Generating NFT images...');
-    const manifest = (0, util_1.resolveManifest)();
-    manifest.forEach((item, key) => {
-        const image = (0, sharp_1.default)({
-            create: {
-                width: 2000,
-                height: 2000,
-                channels: 4,
-                background: { r: 255, g: 255, b: 255, alpha: 0 },
-            },
-        });
-        image.composite(Object.keys(item)
-            .filter((key) => (0, util_1.shouldIncludeTrait)(key))
-            .map((key) => ({
-            input: path_1.default.resolve(`./traits/${key}/${item[key]}.png`),
-            gravity: 'center',
-        })));
-        image
-            .toFile(path_1.default.resolve(`./assets/${key}.png`))
-            .then(() => {
-            (0, util_2.info)(`Generated ${path_1.default.resolve(`./assets/${key}.png`)}`);
-        })
-            .catch(err => {
-            (0, util_2.fail)(`Failed to generate ${path_1.default.resolve(`./assets/${key}.png`)}`);
-        });
+function createImage() {
+    return (0, sharp_1.default)({
+        create: {
+            width: 2000,
+            height: 2000,
+            channels: 4,
+            background: { r: 255, g: 255, b: 255, alpha: 0 },
+        },
     });
-    (0, util_2.info)('Finished generating NFT images!');
+}
+function compositeImage(image, item) {
+    image.composite(Object.keys(item)
+        .filter((key) => (0, util_1.shouldIncludeTrait)(key))
+        .map((key) => ({
+        input: path_1.default.resolve(`./traits/${key}/${item[key]}.png`),
+        gravity: 'center',
+    })));
+}
+async function default_1(task) {
+    const manifest = (0, util_1.resolveManifest)();
+    for (const item of manifest) {
+        const key = manifest.indexOf(item);
+        const filePath = `./assets/${key}.png`;
+        if (task) {
+            task.output = `Creating image at '${filePath}'`;
+        }
+        const image = createImage();
+        compositeImage(image, item);
+        try {
+            await image.toFile(filePath);
+        }
+        catch (err) {
+            (0, util_2.fail)(`Failed to generate ${filePath}`);
+        }
+    }
 }
 exports.default = default_1;
