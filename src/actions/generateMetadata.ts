@@ -8,15 +8,15 @@ import fs from 'fs'
 import delay from 'delay'
 import { tap } from 'lodash'
 
-const manifest = resolveManifest()
-const config = resolveConfiguration()
-
 export default async function (
   task: null | {
     output: string
     title: string
   }
 ): Promise<void> {
+  const manifest = resolveManifest()
+  const config = resolveConfiguration()
+
   // Generate assets folder...
   if (task) {
     task.output = 'Generating assets folder...'
@@ -32,7 +32,7 @@ export default async function (
     const fileNumber = tokenId - 1
     let filePath = `./assets/${fileNumber}.json`
 
-    tap(createToken(tokenId, item), token => {
+    tap(createToken(tokenId, item, config), token => {
       if (task) {
         task.output = `Generating asset metadata '${filePath}'`
       }
@@ -43,7 +43,7 @@ export default async function (
   }
 }
 
-function createToken(number: number, item: Attribute) {
+function createToken(number: number, item: Attribute, config: any) {
   const token = {
     name: `${config.name} #${number}`,
     symbol: config.symbol ?? '',

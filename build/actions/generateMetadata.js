@@ -7,9 +7,9 @@ const util_1 = require("../util");
 const fs_1 = __importDefault(require("fs"));
 const delay_1 = __importDefault(require("delay"));
 const lodash_1 = require("lodash");
-const manifest = (0, util_1.resolveManifest)();
-const config = (0, util_1.resolveConfiguration)();
 async function default_1(task) {
+    const manifest = (0, util_1.resolveManifest)();
+    const config = (0, util_1.resolveConfiguration)();
     // Generate assets folder...
     if (task) {
         task.output = 'Generating assets folder...';
@@ -22,7 +22,7 @@ async function default_1(task) {
         const { tokenId } = item;
         const fileNumber = tokenId - 1;
         let filePath = `./assets/${fileNumber}.json`;
-        (0, lodash_1.tap)(createToken(tokenId, item), token => {
+        (0, lodash_1.tap)(createToken(tokenId, item, config), token => {
             if (task) {
                 task.output = `Generating asset metadata '${filePath}'`;
             }
@@ -32,7 +32,7 @@ async function default_1(task) {
     }
 }
 exports.default = default_1;
-function createToken(number, item) {
+function createToken(number, item, config) {
     const token = {
         name: `${config.name} #${number}`,
         symbol: config.symbol ?? '',

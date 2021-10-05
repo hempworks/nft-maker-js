@@ -14,7 +14,7 @@ function createImage() {
   })
 }
 
-function compositeImage(image, item: any) {
+function compositeImage(image: sharp.Sharp, item: any) {
   image.composite(
     Object.keys(item)
       .filter((key: string) => shouldIncludeTrait(key))

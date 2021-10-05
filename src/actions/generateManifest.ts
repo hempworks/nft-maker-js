@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { info, resolveConfiguration, success } from '../util'
+import { resolveConfiguration } from '../util'
 import { reduce, shuffle, times } from 'lodash'
 import { getRandomWeightedTrait } from '../lib'
 import { TraitCategory } from '../defs'

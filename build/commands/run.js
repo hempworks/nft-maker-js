@@ -8,11 +8,11 @@ exports.desc = 'Run the generator';
 const tasks = new listr2_1.Listr([
     {
         title: 'Generate Manifest',
-        task: () => (0, actions_1.generateManifest)(),
+        task: actions_1.generateManifest,
     },
     {
         title: 'Generate Stats',
-        task: () => (0, actions_1.generateStats)(),
+        task: actions_1.generateStats,
     },
     {
         title: 'Generate Metadata',

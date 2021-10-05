@@ -1,8 +1,6 @@
 import {
-  info,
   resolveConfiguration,
   resolveManifest,
-  success,
   shouldIncludeTrait,
 } from '../util'
 import { Trait, TraitCategory } from '../defs'

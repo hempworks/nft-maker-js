@@ -13,11 +13,11 @@ export const desc: string = 'Run the generator'
 const tasks = new Listr([
   {
     title: 'Generate Manifest',
-    task: () => generateManifest(),
+    task: generateManifest,
   },
   {
     title: 'Generate Stats',
-    task: () => generateStats(),
+    task: generateStats,
   },
   {
     title: 'Generate Metadata',

@@ -12,10 +12,6 @@ export function fail(msg: string) {
   process.exit(1)
 }
 
-export function success(msg: string) {
-  info(chalk.bgGreen.white(msg))
-}
-
 export function resolveConfiguration() {
   let configLocation = path.resolve('./config.js')
 
@@ -27,9 +23,12 @@ export function resolveConfiguration() {
 export function resolveManifest() {
   let manifestLocation = path.resolve('./manifest.json')
 
-  return fs.existsSync(manifestLocation)
-    ? require(manifestLocation)
-    : fail('Could not find the project manifest.')
+  if (fs.existsSync(manifestLocation)) {
+    let rawData = fs.readFileSync(manifestLocation)
+    return JSON.parse(rawData.toString())
+  }
+
+  fail('Could not find the project manifest.')
 }
 
 export function shouldIncludeTrait(trait: string) {
