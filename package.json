@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "start": "nodemon --watch src --exec 'tsc' -e ts",
-    "prepublishOnly": "npm run tsc"
+    "prepublishOnly": "npm run build",
+    "build": "tsc"
   },
   "author": "Hemp",
   "license": "MIT",
