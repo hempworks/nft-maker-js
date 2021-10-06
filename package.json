@@ -1,19 +1,16 @@
 {
-  "name": "nft-maker",
+  "name": "@hempworks/nftmaker",
   "version": "1.0.0",
-  "main": "./build/index.js",
+  "main": "build/index.js",
   "bin": {
-    "nft-maker": "./build/index.js"
+    "nftmaker": "build/index.js"
   },
+  "files": [
+    "lib/"
+  ],
   "scripts": {
     "start": "nodemon --watch src --exec 'tsc' -e ts",
-    "create": "npm run build && npm run test",
-    "build": "tsc",
-    "package": "pkg . --targets node14-macos-x64 --output nft-maker",
-    "local": "sudo npm i -g && nft-maker"
-  },
-  "pkg": {
-    "scripts": "build/**/*.js"
+    "prepublishOnly": "npm run tsc"
   },
   "author": "Hemp",
   "license": "MIT",
@@ -24,26 +21,17 @@
     "processing"
   ],
   "dependencies": {
-    "@types/sharp": "^0.29.2",
-    "@types/zen-observable": "^0.8.3",
     "chalk": "^4.1.2",
-    "clear": "^0.1.0",
-    "cosmiconfig": "^7.0.1",
     "delay": "^5.0.0",
-    "figlet": "^1.5.2",
-    "glob": "^7.2.0",
     "listr2": "^3.12.2",
     "lodash": "^4.17.21",
-    "path": "^0.12.7",
-    "pkg": "^5.3.2",
-    "rxjs": "^7.3.1",
     "sharp": "^0.29.1",
-    "yargs": "^17.2.1",
-    "zen-observable": "^0.8.15"
+    "yargs": "^17.2.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.174",
     "@types/node": "^16.10.1",
+    "@types/sharp": "^0.29.2",
     "jest": "^27.2.2",
     "nodemon": "^2.0.13",
     "prettier": "^2.4.1",

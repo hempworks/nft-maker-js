@@ -26,12 +26,11 @@ export function validUnique(u: object) {
 }
 
 export function resolveConfiguration() {
-  // let configLocation = path.resolve()
+  let configLocation = path.resolve('./config.js')
 
-  return require('./config.js')
-  // return fs.existsSync(configLocation)
-  //   ? require(configLocation)
-  //   : fail('Could not find the project configuration.')
+  return fs.existsSync(configLocation)
+    ? require(configLocation)
+    : fail('Could not find the project configuration.')
 }
 
 export function resolveManifest() {
