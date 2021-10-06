@@ -1,8 +1,8 @@
 {
   "name": "@hempworks/nftmaker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "build/index.js",
-  "license": "WTFPL",
+  "license": "MIT",
   "bin": {
     "nftmaker": "build/index.js"
   },
@@ -15,7 +15,6 @@
     "build": "tsc"
   },
   "author": "Hemp",
-  "license": "MIT",
   "description": "configuration-based NFT image generator",
   "keywords": [
     "nft",
