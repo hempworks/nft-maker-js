@@ -1,0 +1,19 @@
+module.exports = {
+  editionSize: 10,
+  name: 'Solana Project Name',
+  description: 'Your description goes here',
+  collection: {
+    name: 'Solana Project Name (1st Edition)',
+    family: 'Solana Project Name',
+  },
+  sellerFeeBasisPoints: 500,
+  creators: [
+    {
+      address: 'YOUR_ADDRESS_HERE',
+      share: 100,
+    }
+  ],
+  uniques: [],
+  traits: [],
+}
+
