@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.shouldIncludeTrait = exports.resolveManifest = exports.resolveConfiguration = exports.fail = exports.info = void 0;
+exports.shouldIncludeTrait = exports.resolveManifest = exports.resolveConfiguration = exports.validUnique = exports.fail = exports.info = void 0;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const chalk_1 = __importDefault(require("chalk"));
@@ -16,11 +16,23 @@ function fail(msg) {
     process.exit(1);
 }
 exports.fail = fail;
+function validUnique(u) {
+    const { traits } = resolveConfiguration();
+    const traitKeys = traits.map((t) => t.name);
+    Object.keys(u).forEach(trait => {
+        if (!traitKeys.includes(trait)) {
+            fail(`Invalid unique: ${trait}`);
+        }
+    });
+    return true;
+}
+exports.validUnique = validUnique;
 function resolveConfiguration() {
-    let configLocation = path_1.default.resolve('./config.js');
-    return fs_1.default.existsSync(configLocation)
-        ? require(configLocation)
-        : fail('Could not find the project configuration.');
+    // let configLocation = path.resolve()
+    return require('./config.js');
+    // return fs.existsSync(configLocation)
+    //   ? require(configLocation)
+    //   : fail('Could not find the project configuration.')
 }
 exports.resolveConfiguration = resolveConfiguration;
 function resolveManifest() {
@@ -33,8 +45,17 @@ function resolveManifest() {
 }
 exports.resolveManifest = resolveManifest;
 function shouldIncludeTrait(trait) {
-    return resolveConfiguration()
-        .traits.map((t) => t.name)
-        .includes(trait);
+    const { traits } = resolveConfiguration();
+    if (['tokenId'].includes(trait))
+        return false;
+    const included = traits.map((t) => t.name).includes(trait);
+    let traitConfig = traits.filter((t) => t.name === trait)[0];
+    if (!traitConfig.hasOwnProperty('options')) {
+        traitConfig.options = {};
+    }
+    if (!traitConfig.options.hasOwnProperty('exclude')) {
+        traitConfig.options.exclude = false;
+    }
+    return included && !traitConfig.options.exclude;
 }
 exports.shouldIncludeTrait = shouldIncludeTrait;

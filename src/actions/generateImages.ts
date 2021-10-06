@@ -17,7 +17,7 @@ function createImage() {
 function compositeImage(image: sharp.Sharp, item: any) {
   image.composite(
     Object.keys(item)
-      .filter((key: string) => shouldIncludeTrait(key))
+      .filter((key: string) => key !== 'tokenId')
       .map((key: string) => ({
         input: path.resolve(`./traits/${key}/${item[key]}.png`),
         gravity: 'center',
