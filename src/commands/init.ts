@@ -26,7 +26,7 @@ function getTasks(force: boolean) {
           }
 
           if (exists && !force) {
-            task.title = 'Configuration file exists. Skipping!'
+            task.title = 'Configuration file already exists. Skipping!'
             // @ts-ignore
             ctx.skip = true
           }
@@ -55,19 +55,19 @@ function getTasks(force: boolean) {
             let traits = fs.readdirSync(traitsPath)
             let stub = require('../../config.stub')
 
-            stub.traits = traits.map(trait => {
-              let itemsPath = path.resolve(`./traits/${trait}`)
-              let items = fs.readdirSync(itemsPath)
+            stub.traits = traits
+              .filter(t => t !== '.DS_Store')
+              .map(trait => {
+                let itemsPath = path.resolve(`./traits/${trait}`)
+                let items = fs.readdirSync(itemsPath)
 
-              return {
-                name: trait,
-                items: items.map(item => {
-                  return { name: item, weight: 10 }
-                }),
-              }
-            })
-            task.title =
-              "Traits folder doesn't exist. Generating example configuration file."
+                return {
+                  name: trait,
+                  items: items.map(item => {
+                    return { name: item, weight: 10 }
+                  }),
+                }
+              })
           }
 
           let stub = require('../../config.stub')
@@ -77,28 +77,29 @@ function getTasks(force: boolean) {
             task.title =
               "Traits folder doesn't exist. Generated a default configuration file."
 
-            // stub.uniques = [
-            //   {
-            //     Background: 'Black',
-            //     Foreground: 'White',
-            //   },
-            // ]
-            // stub.traits = [
-            //   {
-            //     name: 'Background',
-            //     items: [
-            //       { name: 'Black', weight: 20 },
-            //       { name: 'White', weight: 20 },
-            //     ],
-            //   },
-            //   {
-            //     name: 'Foreground',
-            //     items: [
-            //       { name: 'Black', weight: 20 },
-            //       { name: 'White', weight: 20 },
-            //     ],
-            //   },
-            // ]
+            stub.uniques = [
+              {
+                Background: 'Black',
+                Foreground: 'White',
+              },
+            ]
+
+            stub.traits = [
+              {
+                name: 'Background',
+                items: [
+                  { name: 'Black', weight: 20 },
+                  { name: 'White', weight: 20 },
+                ],
+              },
+              {
+                name: 'Foreground',
+                items: [
+                  { name: 'Black', weight: 20 },
+                  { name: 'White', weight: 20 },
+                ],
+              },
+            ]
           }
 
           fs.writeFileSync(
