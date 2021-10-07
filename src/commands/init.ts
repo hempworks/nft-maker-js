@@ -5,8 +5,25 @@ import fs from 'fs'
 import { Arguments, CommandBuilder } from 'yargs'
 
 export const command: string = 'init'
+
+// @ts-ignore
 export const desc: string =
   'Initialize a configuration file based on the traits folder'
+
+type Options = {
+  force: boolean
+}
+
+// @ts-ignore
+export const builder: CommandBuilder<Options> = yargs => {
+  yargs.option('force', {
+    alias: 'f',
+    demandOption: true,
+    default: false,
+    type: 'boolean',
+    describe: 'Force creation of the configuration file',
+  })
+}
 
 // @ts-ignore
 function getTasks(force: boolean) {
@@ -114,20 +131,6 @@ function getTasks(force: boolean) {
     ],
     { concurrent: false }
   )
-}
-
-type Options = {
-  force: boolean
-}
-
-export const builder: CommandBuilder<Options> = yargs => {
-  yargs.option('force', {
-    alias: 'f',
-    demandOption: true,
-    default: false,
-    type: 'boolean',
-    describe: 'Force creation of the configuration file',
-  })
 }
 
 export const handler = (argv: Arguments<Options>): void => {
