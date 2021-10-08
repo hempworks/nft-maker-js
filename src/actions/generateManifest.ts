@@ -64,7 +64,10 @@ function isCompatible(newImage: {}) {
         let incompatValue = castArray(traitOption.incompatible[incompatKey])
 
         // @ts-ignore
-        if (incompatValue.includes(newImage[incompatKey])) {
+        if (
+          incompatValue.includes(newImage[incompatKey]) ||
+          incompatValue.includes('*')
+        ) {
           return false
         }
 

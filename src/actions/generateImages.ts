@@ -1,5 +1,9 @@
 import sharp from 'sharp'
-import { resolveManifest, shouldIncludeTrait } from '../util'
+import {
+  resolveConfiguration,
+  resolveManifest,
+  shouldIncludeTrait,
+} from '../util'
 import path from 'path'
 import { fail } from '../util'
 
@@ -29,25 +33,42 @@ function compositeImage(image: sharp.Sharp, item: any) {
   )
 }
 
-export default async function (
-  task: null | {
-    title: string
-    output: string
-  }
-): Promise<void> {
+interface Whatever {
+  title: string
+  output: string
+}
+
+export default async function (task: null | Whatever): Promise<void> {
   const manifest = resolveManifest()
 
   for (const item of manifest) {
     const key: number = manifest.indexOf(item)
     const filePath = path.resolve(`./assets/${key}.png`)
 
-    if (task) {
-      task.output = `Creating image at '${filePath}'`
-    }
+    if (task) task.output = `Creating image at '${filePath}'`
 
     const image = createImage()
 
-    compositeImage(image, item)
+    await compositeImage(image, item)
+
+    // const { imageOptions } = resolveConfiguration()
+    // if (imageOptions !== undefined && imageOptions.length > 0) {
+    // Object.keys(imageOptions).forEach(option => {
+    //   // @ts-ignore
+    //   image[option](imageOptions[option])
+    //   image.resize(2000, 2000)
+    // })
+    // }
+
+    // image.extract({
+    //   left: 0,
+    //   top: 100,
+    //   width: 2000,
+    //   height: 2000,
+    // })
+    //
+
+    // image.resize(1000, 1000, { fit: 'cover' })
 
     try {
       await image.toFile(filePath)
