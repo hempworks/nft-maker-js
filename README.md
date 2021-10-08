@@ -64,7 +64,7 @@ This will generate several files:
 - `manifest.json` An image manifest with every token and
   attribute
 - `stats.json` Counts of each attribute and the number of times
-  its used
+  they are used
 - `assets` A folder of images and JSON files generated from your
   configuration file. These files are zero-indexed, meaning that
   Token #1's filenames are `0.png` and `0.json`
