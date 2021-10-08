@@ -216,3 +216,25 @@ module.exports = {
   ]
 }
 ```
+
+### Generating Unique 1/1 Images (Uniques)
+
+Every project tends to need some, special, ultra-rare images.
+You can have NFT Maker generate these "uniques" and include them
+in your drop. Just specify the specific attributes and their
+special values in the `uniques` key of your configuration:
+
+```js
+module.exports = {
+  //...
+  uniques: [
+    {
+      Background: 'Midnight',
+      Face: 'Iridescent',
+      Eyes: 'Laser',
+      Hair: 'Lightning'
+    }
+  ],
+  //...
+}
+```
