@@ -44,7 +44,7 @@ function prepareOutputFolder() {
   }
 }
 
-function isCompatible(newImage: {}) {
+function isCompatible(newImage: { [index: string]: any }) {
   const { traits } = resolveConfiguration()
 
   return Object.keys(newImage).reduce((carry, key) => {
