@@ -16,19 +16,7 @@ package offers a few unique features not currently implemented:
   unique between individual NFTs.
 - The ability to define incompatible layers (e.g. This type of
   mouth doesn't work with this beard).
-
-## Installation
-
-You can install NFT Maker using your favorite Node package
-manager:
-
-```sh 
-# NPM
-npm install -g nftmaker
-
-# Yarn
-yarn global install nftmaker
-```
+-
 
 ## Quickstart
 
@@ -48,6 +36,37 @@ nftmaker init
 # incompatibilities. Then, run the generator:
 nftmaker run
 ```
+
+## Installation
+
+You can install NFT Maker using your favorite Node package
+manager:
+
+```sh 
+# NPM
+npm install -g nftmaker
+
+# Yarn
+yarn global install nftmaker
+```
+
+## Running NFT Maker
+
+After installation and configuration, you can generate your
+images and metadata by using the `run` command inside your
+project folder:
+
+`nftmaker run`
+
+This will generate several files.i
+
+- `manifest.json` An image manifest with every token and
+  attribute
+- `stats.json` Counts of each attribute and the number of
+  times its used
+- `assets` A folder of images and JSON files generated from
+  your configuration file. These files are zero-indexed, meaning
+  that Token #1's filenames are `0.png` and `0.json`
 
 ## Configuration
 
