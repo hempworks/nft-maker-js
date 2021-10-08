@@ -18,10 +18,14 @@ function compositeImage(image: sharp.Sharp, item: any) {
   image.composite(
     Object.keys(item)
       .filter((key: string) => key !== 'tokenId')
-      .map((key: string) => ({
-        input: path.resolve(`./traits/${key}/${item[key]}.png`),
-        gravity: 'center',
-      }))
+      .map((key: string) => {
+        const inputPath = `./traits/${key}/${item[key]}.png`
+
+        return {
+          input: path.resolve(inputPath),
+          gravity: 'center',
+        }
+      })
   )
 }
 
@@ -35,7 +39,7 @@ export default async function (
 
   for (const item of manifest) {
     const key: number = manifest.indexOf(item)
-    const filePath = `./assets/${key}.png`
+    const filePath = path.resolve(`./assets/${key}.png`)
 
     if (task) {
       task.output = `Creating image at '${filePath}'`
@@ -47,8 +51,8 @@ export default async function (
 
     try {
       await image.toFile(filePath)
-    } catch (err) {
-      fail(`Failed to generate ${filePath}`)
+    } catch (err: any) {
+      fail(`Failed to generate ${filePath}: ${err.toString()}`)
     }
   }
 }

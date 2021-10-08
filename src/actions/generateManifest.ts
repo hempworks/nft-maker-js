@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { resolveConfiguration, validUnique } from '../util'
-import { castArray, reduce, shuffle, times } from 'lodash'
+import { castArray, shuffle, times } from 'lodash'
 import { getRandomWeightedTrait } from '../lib'
 import { TraitCategory } from '../defs'
 
@@ -24,8 +24,6 @@ export default function () {
   )
 
   imageData = shuffle(imageData)
-
-  // Check compatibility
 
   // Assign token IDs...
   imageData = imageData.map((item: any, key: number) => {
@@ -95,14 +93,13 @@ function createNewUniqueImage(traits: Array<TraitCategory>): object {
 }
 
 function createNewImage(traits: Array<TraitCategory>) {
-  return reduce(
-    traits,
-    (carry, { name }) => {
-      return {
-        ...carry,
-        ...{ [name]: getRandomWeightedTrait(traits, name) },
-      }
-    },
-    {}
-  )
+  const { order } = resolveConfiguration()
+  let tmp = {}
+
+  order.forEach((trait: string) => {
+    // @ts-ignore
+    tmp[trait] = getRandomWeightedTrait(traits, trait)
+  })
+
+  return tmp
 }

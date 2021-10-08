@@ -25,6 +25,8 @@ export const builder: CommandBuilder<Options> = yargs => {
   })
 }
 
+enum TraitStrategy {}
+
 // @ts-ignore
 function getTasks(force: boolean) {
   return new Listr(
@@ -35,62 +37,56 @@ function getTasks(force: boolean) {
           await delay(500)
 
           let configPath = path.resolve('./config.js')
+          let configPathExists = fs.existsSync(configPath)
 
-          let exists = fs.existsSync(configPath)
-
-          if (exists && force) {
+          if (configPathExists && force) {
             task.title = 'Forcing overwrite of configuration file.'
           }
 
-          if (exists && !force) {
-            task.title = 'Configuration file already exists. Skipping!'
-            // @ts-ignore
+          if (configPathExists && !force) {
+            task.title =
+              'Configuration file already configPathExists. Skipping!'
             ctx.skip = true
           }
 
-          if (!exists) {
+          if (!configPathExists) {
             task.title = 'No configuration file found. Creating one...'
-            // @ts-ignore
-            ctx.creatingDefault = true
           }
         },
       },
       {
         title: 'Writing configuration file...',
-        skip: (ctx: boolean) => {
-          // @ts-ignore
-          return ctx.skip
-        },
+        skip: (ctx): boolean => ctx.skip,
         task: async (ctx, task): Promise<void> => {
           await delay(500)
 
-          let traitsPath = path.resolve('./traits')
+          const traitsPath = path.resolve('./traits')
+          const traitsPathExists = fs.existsSync(traitsPath)
+          let stub = require('../../config.stub')
 
-          if (fs.existsSync(traitsPath)) {
+          // If we're here it's because we're either forcing the creation of the configuration file or we're creating a new one. The only concern is if we have a traits folder or not.
+
+          if (traitsPathExists) {
             task.title = 'Traits folder exists...writing configuration.'
 
             let traits = fs.readdirSync(traitsPath)
-            let stub = require('../../config.stub')
 
             stub.traits = traits
               .filter(t => t !== '.DS_Store')
               .map(trait => {
                 let itemsPath = path.resolve(`./traits/${trait}`)
-                let items = fs.readdirSync(itemsPath)
+                let items = fs
+                  .readdirSync(itemsPath)
+                  .filter(item => !/(^|\/)\.[^\/\.]/g.test(item))
 
                 return {
                   name: trait,
                   items: items.map(item => {
-                    return { name: item, weight: 10 }
+                    return { name: item.replace('.png', ''), weight: 10 }
                   }),
                 }
               })
-          }
-
-          let stub = require('../../config.stub')
-
-          // @ts-ignore
-          if (ctx.creatingDefault) {
+          } else {
             task.title =
               "Traits folder doesn't exist. Generated a default configuration file."
 
