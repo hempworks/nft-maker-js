@@ -51,6 +51,35 @@ nftmaker run
 
 ## Configuration
 
+### Required Configuration Values
+
+In addition to the image attributes (traits), there are other
+configuration options you need to specify so the output JSON is
+correct. These include the edition size, the project name and
+description, the creator addresses and shares, and other
+metadata:
+
+```js
+module.exports = {
+  editionSize: 10,
+  name: 'Solana Project Name',
+  description: 'Your description goes here',
+  collection: {
+    name: 'Solana Project Name (1st Edition)',
+    family: 'Solana Project Name',
+  },
+  sellerFeeBasisPoints: 500,
+  creators: [
+    {
+      address: 'YOUR_ADDRESS_HERE',
+      share: 100,
+    }
+  ],
+}
+```
+
+### Generating a configuration file from a folder of traits
+
 NFT Maker uses a configuration file to generate the image assets
 and JSON metadata. NFT Maker can generate this file for you
 automatically by reading the directory structure of your traits
@@ -76,13 +105,109 @@ For example, if you have a folder of layers (traits) like this:
     - Face.png
 ```
 
-NFT Maker can read this folder and generate and example
+NFT Maker can read this folder and generate an example
 configuration for you. You are free to further customize this
 configuration file to your liking.
 
-If you've already generated a config file and need to 
-overwrite your changes, you can pass `--force` to overwrite 
-the existing file:
+If you've already generated a config file and need to overwrite
+your changes, you can pass `--force` to overwrite the existing
+file:
 
 `nftmaker init --force`
 
+### Ordering your traits
+
+Your project's traits are probably required to be in a certain
+order to make sense. You can adjust the order of the layers, by
+filling out the `order` key inside your configuration:
+
+```js
+module.exports = {
+  //...
+  order: ['Background', 'Face', 'Eyes', 'Hair'],
+  //...
+}
+```
+
+### Specifying incompatibilities
+
+Some individual trait items may not be comptatible visually with
+another trait item. For example, you may have a "Mouth"
+item that doesn't work with a certain "Beard" item. You can
+configure which items are incompatible with each by using
+the `incompatible` key, passing in an object of trait and their
+array of incompatible values:
+
+```js
+//...
+traits: [
+  {
+    name: 'Beard',
+    items: [
+      {
+        name: 'Soul Patch', weight: 10,
+        incompatible: {
+          Mouth: ['Derp', 'Toothy Grin'],
+        }
+      },
+    ],
+  },
+  {
+    name: 'Mouth',
+    items: [
+      { name: 'Derp', weight: 10 },
+      { name: 'Toothy Grin', weight: 10 },
+    ],
+  }
+]
+//...
+```
+
+You may also tell NFT Maker that all of a given trait's items
+are incompatible by using an asterisk as the value:
+
+```js
+//...
+traits: [
+  {
+    name: 'Beard',
+    items: [
+      {
+        name: 'Soul Patch', weight: 10,
+        incompatible: {
+          Mouth: ['*'],
+        }
+      },
+    ],
+  },
+  {
+    name: 'Mouth',
+    items: [
+      { name: 'Derp', weight: 10 },
+      { name: 'Toothy Grin', weight: 10 },
+    ],
+  }
+]
+//...
+```
+
+### Excluding traits from JSON output
+
+Some traits may be common to all of your NFTs but do not need to
+be in the JSON metadata. For example, you may have an outline
+that needs to be applied to each image. In that case, you can
+specify an `options` key to the trait to mark it as excluded:
+
+```js
+//..
+traits: [
+  {
+    name: 'Outline',
+    items: [ /** Items **/],
+    options: {
+      excluded: true
+    }
+  }
+]
+//..
+```
