@@ -139,56 +139,58 @@ the `incompatible` key, passing in an object of trait and their
 array of incompatible values:
 
 ```js
+module.exports = {
 //...
-traits: [
-  {
-    name: 'Beard',
-    items: [
-      {
-        name: 'Soul Patch', weight: 10,
-        incompatible: {
-          Mouth: ['Derp', 'Toothy Grin'],
-        }
-      },
-    ],
-  },
-  {
-    name: 'Mouth',
-    items: [
-      { name: 'Derp', weight: 10 },
-      { name: 'Toothy Grin', weight: 10 },
-    ],
-  }
-]
-//...
+  traits: [
+    {
+      name: 'Beard',
+      items: [
+        {
+          name: 'Soul Patch', weight: 10,
+          incompatible: {
+            Mouth: ['Derp', 'Toothy Grin'],
+          }
+        },
+      ],
+    },
+    {
+      name: 'Mouth',
+      items: [
+        { name: 'Derp', weight: 10 },
+        { name: 'Toothy Grin', weight: 10 },
+      ],
+    }
+  ]
+}
 ```
 
 You may also tell NFT Maker that all of a given trait's items
 are incompatible by using an asterisk as the value:
 
 ```js
+module.exports = {
 //...
-traits: [
-  {
-    name: 'Beard',
-    items: [
-      {
-        name: 'Soul Patch', weight: 10,
-        incompatible: {
-          Mouth: ['*'],
-        }
-      },
-    ],
-  },
-  {
-    name: 'Mouth',
-    items: [
-      { name: 'Derp', weight: 10 },
-      { name: 'Toothy Grin', weight: 10 },
-    ],
-  }
-]
-//...
+  traits: [
+    {
+      name: 'Beard',
+      items: [
+        {
+          name: 'Soul Patch', weight: 10,
+          incompatible: {
+            Mouth: ['*'],
+          }
+        },
+      ],
+    },
+    {
+      name: 'Mouth',
+      items: [
+        { name: 'Derp', weight: 10 },
+        { name: 'Toothy Grin', weight: 10 },
+      ],
+    }
+  ]
+}
 ```
 
 ### Excluding traits from JSON output
@@ -199,15 +201,18 @@ that needs to be applied to each image. In that case, you can
 specify an `options` key to the trait to mark it as excluded:
 
 ```js
-//..
-traits: [
-  {
-    name: 'Outline',
-    items: [ /** Items **/],
-    options: {
-      excluded: true
+module.exports = {
+//...
+  traits: [
+    {
+      name: 'Outline',
+      items: [
+        //...
+      ],
+      options: {
+        excluded: true
+      }
     }
-  }
-]
-//..
+  ]
+}
 ```
