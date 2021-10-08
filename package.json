@@ -17,6 +17,7 @@
   },
   "author": "Hemp",
   "description": "configuration-based NFT image generator",
+  "homepage": "https://github.com/davidhemphill/nft-maker-js",
   "keywords": [
     "nft",
     "image",
