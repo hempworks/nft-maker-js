@@ -58,7 +58,6 @@ function isCompatible(newImage: { [index: string]: any }) {
       return carry
     }
 
-    // Wew
     return Object.keys(traitOption.incompatible).reduce(
       (innerCarry: boolean, incompatKey: string) => {
         let incompatValue = castArray(traitOption.incompatible[incompatKey])

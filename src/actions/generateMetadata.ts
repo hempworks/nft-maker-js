@@ -43,7 +43,7 @@ export default async function (
   }
 }
 
-function createToken(number: number, item: Attribute, config: any) {
+export function createToken(number: number, item: Attribute, config: any) {
   const token = {
     name: `${config.name} #${number}`,
     symbol: config.symbol ?? '',
@@ -52,7 +52,10 @@ function createToken(number: number, item: Attribute, config: any) {
     image: 'image.png',
     external_url: '',
     attributes: [],
-    collection: config.collection.name,
+    collection: {
+      name: config.collection.name,
+      family: config.collection.family,
+    },
     properties: {
       files: [
         {
