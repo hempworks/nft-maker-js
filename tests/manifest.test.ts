@@ -48,7 +48,7 @@ describe('createToken', () => {
       shouldIncludeTrait
     )
 
-    shouldIncludeTraitMock.mockReturnValue(true)
+    shouldIncludeTraitMock.mockReturnValue(trait => true)
 
     const token = createToken(
       69,
