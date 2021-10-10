@@ -6,7 +6,6 @@ import { TraitCategory } from '../defs'
 
 let imageData: any = []
 let attempts = 0
-let combinations = 0
 
 export default function () {
   const { traits, uniques, editionSize } = resolveConfiguration()
@@ -77,24 +76,27 @@ function isCompatible(newImage: { [index: string]: any }) {
   }, true)
 }
 
-function createNewUniqueImage(traits: Array<TraitCategory>): object {
+let maxNumberOfAttempts = 400
+
+export function createNewUniqueImage(traits: Array<TraitCategory>): object {
   attempts++
 
-  if (attempts > 400) {
-    throw Error(`Too many attempts ${attempts}`)
+  console.log(attempts)
+
+  if (attempts >= maxNumberOfAttempts) {
+    throw Error()
   }
 
   let newImage = createNewImage(traits)
 
   if (!imageData.includes(newImage) && isCompatible(newImage)) {
-    combinations++
     return newImage
   }
 
   return createNewUniqueImage(traits)
 }
 
-function createNewImage(traits: Array<TraitCategory>) {
+export function createNewImage(traits: Array<TraitCategory>) {
   const { order } = resolveConfiguration()
   let tmp = {}
 

@@ -15,7 +15,7 @@
     "prepublishOnly": "npm run build",
     "build": "tsc",
     "test": "jest",
-    "test-watch": "jest --watch"
+    "test:watch": "jest --watch"
   },
   "author": "Hemp",
   "description": "configuration-based NFT image generator",

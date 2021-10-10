@@ -1,7 +1,14 @@
 import { createToken } from '../src/actions/generateMetadata'
+import {
+  createNewUniqueImage,
+  // createNewImage,
+  // getNumberOfAttempts,
+} from '../src/actions/generateManifest'
+
 import { resolveConfiguration, shouldIncludeTrait } from '../src/util'
 
 jest.mock('../src/util')
+// jest.mock('../src/actions/generateManifest')
 
 const testConfig = {
   name: 'Hemp',
@@ -17,6 +24,7 @@ const testConfig = {
     name: 'Hemp (1st Edition)',
     family: 'Hemp',
   },
+  order: ['Background', 'Foreground'],
   traits: [
     {
       name: 'Background',
@@ -37,39 +45,30 @@ const testConfig = {
 }
 const { traits } = testConfig
 
-describe('createToken', () => {
-  it('should return a valid token', async () => {
+describe('createNewUniqueImage', () => {
+  it('fails after 400 tries for a unique', () => {
     const resolveConfigMock = <jest.Mock<typeof resolveConfiguration>>(
       resolveConfiguration
     )
 
     resolveConfigMock.mockReturnValue(testConfig as any)
 
-    const shouldIncludeTraitMock = <jest.Mock<typeof shouldIncludeTrait>>(
-      shouldIncludeTrait
-    )
+    // const createNewImageMock = <jest.Mock<typeof createNewImage>>createNewImage
+    // const getNumberOfAttemptsMock = <jest.Mock<typeof getNumberOfAttempts>>(
+    //   getNumberOfAttempts
+    // )
+    // const getNumberOfAttemptsMock = jest.fn() as jest.MockedFunction<
+    //   typeof getNumberOfAttempts
+    // >
+    // getNumberOfAttemptsMock.mockReturnValue(500)
 
-    shouldIncludeTraitMock.mockReturnValue(() => true)
+    // const throwError = () => {
 
-    const token = createToken(
-      69,
-      { Background: 'Midnight', Foreground: 'White' },
-      testConfig
-    )
+    //   throw Error('Poop!')
+    // }
 
-    expect(shouldIncludeTrait).toHaveBeenCalledTimes(2)
-
-    expect(token.name).toEqual('Hemp #69')
-    expect(token.description).toEqual('Sexy NFTs')
-    expect(token.seller_fee_basis_points).toEqual(500)
-    expect(token.collection).toEqual({
-      name: 'Hemp (1st Edition)',
-      family: 'Hemp',
-    })
-    expect(token.creators).toEqual([{ address: '1234567890', share: 100 }])
-    expect(token.attributes).toEqual([
-      { trait_type: 'Background', value: 'Midnight' },
-      { trait_type: 'Foreground', value: 'White' },
-    ])
+    expect(() => {
+      createNewUniqueImage(traits)
+    }).toThrowError()
   })
 })
