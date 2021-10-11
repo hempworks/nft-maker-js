@@ -123,7 +123,7 @@ For example, if you have a folder of layers (traits) like this:
   - Eyes
     - Blue Eyes.png
     - Brown Eyes.png
-    - Brown Eyes.png
+    - Green Eyes.png
   - Face
     - Face.png
 ```
