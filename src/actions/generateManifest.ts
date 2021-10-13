@@ -47,10 +47,9 @@ function prepareOutputFolder() {
 function isCompatible(newImage: { [index: string]: any }) {
   const { traits } = resolveConfiguration()
 
-  return Object.keys(newImage).reduce((carry, key) => {
+  return Object.keys(newImage).reduce((carry: boolean, key: string) => {
     let trait = traits.filter((trait: TraitCategory) => trait.name == key)[0]
     let traitOption = trait.items.filter(
-      // @ts-ignore
       (item: any) => item.name === newImage[key]
     )[0]
 
@@ -58,11 +57,17 @@ function isCompatible(newImage: { [index: string]: any }) {
       return carry
     }
 
+    if (
+      traitOption.hasOwnProperty('compatible') &&
+      typeof traitOption.incompatible === 'function'
+    ) {
+      //   return traitOption.incompatible(incompatValue, incompatKey)
+    }
+
     return Object.keys(traitOption.incompatible).reduce(
       (innerCarry: boolean, incompatKey: string) => {
         let incompatValue = castArray(traitOption.incompatible[incompatKey])
 
-        // @ts-ignore
         if (incompatValue.includes(newImage[incompatKey])) {
           return false
         }
