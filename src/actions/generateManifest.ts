@@ -1,11 +1,12 @@
 import fs from 'fs'
-import { resolveConfiguration, validUnique } from '../util'
+import { fail, resolveConfiguration, validUnique } from '../util'
 import { castArray, shuffle, times } from 'lodash'
 import { getRandomWeightedTrait } from '../lib'
 import { TraitCategory } from '../defs'
 
 let imageData: any = []
 let attempts = 0
+let { maxAttempts: maxNumberOfAttempts } = resolveConfiguration()
 
 export default function () {
   const { traits, uniques, editionSize } = resolveConfiguration()
@@ -73,15 +74,11 @@ function isCompatible(newImage: { [index: string]: any }) {
   }, true)
 }
 
-let maxNumberOfAttempts = 400
-
 export function createNewUniqueImage(traits: Array<TraitCategory>): object {
   attempts++
 
-  console.log(attempts)
-
   if (attempts >= maxNumberOfAttempts) {
-    throw Error()
+    fail(`Could not generate unique image after ${attempts} attempts.`)
   }
 
   let newImage = createNewImage(traits)

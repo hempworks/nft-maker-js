@@ -85,6 +85,7 @@ metadata:
 ```js
 module.exports = {
   editionSize: 10, // How many NFTs should be generated
+  maxAttempts: 400, // The maximum amount of times NFT Maker should attempt to find a unique image before failing
   name: 'Solana Project Name', // The name of your project
   description: 'Your description goes here',
   collection: {

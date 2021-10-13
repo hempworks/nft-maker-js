@@ -1,5 +1,6 @@
 module.exports = {
   editionSize: 10,
+  maxAttempts: 400,
   name: 'Solana Project Name',
   description: 'Your description goes here',
   collection: {
