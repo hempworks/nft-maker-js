@@ -2,7 +2,7 @@ import { find, sumBy } from 'lodash'
 import { TraitCategory, Trait } from './defs'
 
 export function getRandomWeightedTrait(
-  traits: Array<TraitCategory>,
+  traits: TraitCategory[],
   traitName: string
 ): string {
   const category: TraitCategory | undefined = find(
