@@ -187,35 +187,6 @@ module.exports = {
 }
 ```
 
-You may also tell NFT Maker that all of a given trait's items
-are incompatible by using an asterisk as the value:
-
-```js
-module.exports = {
-//...
-  traits: [
-    {
-      name: 'Beard',
-      items: [
-        {
-          name: 'Soul Patch', weight: 10,
-          incompatible: {
-            Mouth: ['*'],
-          }
-        },
-      ],
-    },
-    {
-      name: 'Mouth',
-      items: [
-        { name: 'Derp', weight: 10 },
-        { name: 'Toothy Grin', weight: 10 },
-      ],
-    }
-  ]
-}
-```
-
 ### Excluding traits from JSON output
 
 Some traits may be common to all of your NFTs but do not need to
