@@ -1,26 +1,25 @@
 import fs from 'fs'
-import { fail, resolveConfiguration, validUnique } from '../util'
-import { castArray, shuffle, times } from 'lodash'
-import { getRandomWeightedTrait } from '../lib'
-import { TraitCategory } from '../defs'
+import { dd, fail, resolveConfiguration } from '../util'
+import { find, shuffle, sumBy, times } from 'lodash'
+import { Image, Trait, TraitCategory } from '../defs'
 
 let imageData: any = []
 let attempts = 0
 let { maxAttempts: maxNumberOfAttempts } = resolveConfiguration()
 
 export default function () {
-  const { traits, uniques, editionSize } = resolveConfiguration()
+  const { uniques, editionSize } = resolveConfiguration()
 
   prepareOutputFolder()
 
-  uniques.forEach((u: object) => {
+  uniques.forEach((u: Image) => {
     if (validUnique(u)) {
       imageData.push(u)
     }
   })
 
   times(editionSize - uniques.length, () =>
-    imageData.push(createNewUniqueImage(traits))
+    imageData.push(createNewUniqueImage())
   )
 
   imageData = shuffle(imageData)
@@ -44,65 +43,86 @@ function prepareOutputFolder() {
   }
 }
 
-function isCompatible(newImage: { [index: string]: any }) {
-  const { traits } = resolveConfiguration()
-
-  return Object.keys(newImage).reduce((carry: boolean, key: string) => {
-    let trait = traits.filter((trait: TraitCategory) => trait.name == key)[0]
-    let traitOption = trait.items.filter(
-      (item: any) => item.name === newImage[key]
-    )[0]
-
-    if (!traitOption.hasOwnProperty('incompatible')) {
-      return carry
-    }
-
-    if (
-      traitOption.hasOwnProperty('compatible') &&
-      typeof traitOption.incompatible === 'function'
-    ) {
-      //   return traitOption.incompatible(incompatValue, incompatKey)
-    }
-
-    return Object.keys(traitOption.incompatible).reduce(
-      (innerCarry: boolean, incompatKey: string) => {
-        let incompatValue = castArray(traitOption.incompatible[incompatKey])
-
-        if (incompatValue.includes(newImage[incompatKey])) {
-          return false
-        }
-
-        return innerCarry
-      },
-      carry
-    )
-  }, true)
-}
-
-export function createNewUniqueImage(traits: Array<TraitCategory>): object {
+export function createNewUniqueImage(): object {
   attempts++
 
   if (attempts >= maxNumberOfAttempts) {
     fail(`Could not generate unique image after ${attempts} attempts.`)
   }
 
-  let newImage = createNewImage(traits)
+  let newImage = createNewImage()
 
-  if (!imageData.includes(newImage) && isCompatible(newImage)) {
+  if (!imageData.includes(newImage)) {
     return newImage
   }
 
-  return createNewUniqueImage(traits)
+  return createNewUniqueImage()
 }
 
-export function createNewImage(traits: Array<TraitCategory>) {
+export function createNewImage() {
   const { order } = resolveConfiguration()
-  let tmp = {}
 
-  order.forEach((trait: string) => {
-    // @ts-ignore
-    tmp[trait] = getRandomWeightedTrait(traits, trait)
+  return order.reduce((existing: Image, trait: string) => {
+    return {
+      ...existing,
+      [trait]: getRandomWeightedTrait(trait, existing),
+    }
+  }, {})
+}
+
+export function getRandomWeightedTrait(trait: string, existing: Image): string {
+  const { traits } = resolveConfiguration()
+
+  const category: TraitCategory = find(
+    traits,
+    (t: TraitCategory) => t.name == trait
+  )
+
+  // Find compatible category trait items for the existing object
+  // If it's the first time to find a trait we'll just grab
+  // whichever one we want, since there's nothing to check.
+  let items: Trait[] = category.items
+
+  items = items.filter((trait: Trait) => {
+    return traitIsCompatibleWithCurrentImage(trait, existing)
   })
 
-  return tmp
+  let sum = sumBy(category.items, (i: Trait) => i.weight)
+  const threshold = Math.random() * sum
+
+  let total = 0
+  for (let i = 0; i < items.length; i++) {
+    total += items[i].weight
+
+    if (total >= threshold) {
+      return items[i].name
+    }
+  }
+
+  return items[items.length - 1].name
+}
+
+export function validUnique(unique: Image) {
+  const { traits } = resolveConfiguration()
+  const traitKeys = traits.map((t: TraitCategory) => t.name)
+
+  Object.keys(unique).forEach(trait => {
+    if (!traitKeys.includes(trait)) {
+      fail(`Invalid unique: ${trait}`)
+    }
+  })
+
+  return true
+}
+
+export function traitIsCompatibleWithCurrentImage(
+  trait: Trait,
+  existing: Image
+): boolean {
+  if (Object.keys(existing).length > 0) {
+    dd(trait, existing)
+    return true
+  }
+
+  return true
 }

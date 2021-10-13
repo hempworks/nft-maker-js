@@ -1,6 +1,6 @@
 export interface TraitCategory {
   name: string
-  items: Array<Trait>
+  items: Trait[]
 }
 
 export interface Trait {
@@ -9,5 +9,9 @@ export interface Trait {
 }
 
 export interface Attribute {
-  [name: string]: any
+  [name: string]: string | number
+}
+
+export interface Image {
+  [name: string]: string | number
 }

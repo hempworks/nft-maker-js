@@ -7,22 +7,14 @@ export function info(msg: string): any {
   return console.info(msg)
 }
 
-export function fail(msg: string) {
-  info(chalk.red(msg))
+export function dd(...what: any[]) {
+  console.log(...what)
   process.exit(1)
 }
 
-export function validUnique(u: object) {
-  const { traits } = resolveConfiguration()
-  const traitKeys = traits.map((t: TraitCategory) => t.name)
-
-  Object.keys(u).forEach(trait => {
-    if (!traitKeys.includes(trait)) {
-      fail(`Invalid unique: ${trait}`)
-    }
-  })
-
-  return true
+export function fail(msg: string) {
+  info(chalk.red(msg))
+  process.exit(1)
 }
 
 export function resolveConfiguration() {

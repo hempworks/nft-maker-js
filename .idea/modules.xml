@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/nft-maker-js.iml" filepath="$PROJECT_DIR$/.idea/nft-maker-js.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../soldevs/.idea/soldevs.iml" filepath="$PROJECT_DIR$/../soldevs/.idea/soldevs.iml" />
     </modules>
   </component>
 </project>
