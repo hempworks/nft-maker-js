@@ -1,14 +1,15 @@
 import fs from 'fs'
 import { dd, fail, resolveConfiguration } from '../util'
 import { find, shuffle, sumBy, times } from 'lodash'
-import { Image, Trait, TraitCategory } from '../defs'
+import { Incompatible, Image, Trait, TraitCategory } from '../defs'
 
 let imageData: any = []
 let attempts = 0
-let { maxAttempts: maxNumberOfAttempts } = resolveConfiguration()
+let maxNumberOfAttempts = 0
 
 export default function () {
-  const { uniques, editionSize } = resolveConfiguration()
+  const { maxAttempts, uniques, editionSize } = resolveConfiguration()
+  maxNumberOfAttempts = maxAttempts
 
   prepareOutputFolder()
 
@@ -116,11 +117,64 @@ export function validUnique(unique: Image) {
 }
 
 export function traitIsCompatibleWithCurrentImage(
-  trait: Trait,
+  proposedTrait: Trait,
   existing: Image
 ): boolean {
   if (Object.keys(existing).length > 0) {
-    dd(trait, existing)
+    // Pull the incompatibilities for the proposedTrait and
+    // go through every existing proposedTrait, to see
+    // if the proposed proposedTrait is compatible
+    // return Object.keys(existing).reduce(
+    //   (isCompatible: boolean, existingKey: string) => {
+    //     console.log(existingKey, proposedTrait.name)
+    //     return true
+    //   },
+    //   true // We assume compatibility by default
+    // )
+
+    const { traits } = resolveConfiguration()
+
+    // Check if the proposed trait is incompatible
+    // with any of the existing image values.
+    if (proposedTrait.hasOwnProperty('incompatible')) {
+      return Object.keys(proposedTrait.incompatible as Incompatible).reduce(
+        (isCompatible: boolean, incompatKey: string) => {
+          // console.log(proposedTrait.incompatible?.[incompatKey])
+          // let { incompatibles } = proposedTrait.incompatible
+
+          let incompatible: Incompatible[] = []
+          if (proposedTrait.incompatible) {
+            incompatible = proposedTrait.incompatible[incompatKey]
+          }
+
+          // if (incompatible) {
+          //   //
+          //   return true
+          // }
+
+          // console.log(incompatibles)
+
+          // Get the trait category we're checking...
+          // let existingTrait = traits.filter(
+          //   (category: TraitCategory) => category.name == incompatKey
+          // )[0]
+
+          // Get the trait item and see if the key exists
+          // let existingTraitItem = existingTrait.items.filter((t: Trait) => {
+          // fail([trait.name, proposedTrait.name])
+          // trait.name == proposedTrait.name
+          // return t.name == trait.name
+          // console.log(trait.name, proposedTrait.name)
+          // })
+
+          // console.log(existingTraitItem)
+
+          return isCompatible
+        },
+        true // We assume compatibility by default
+      )
+    }
+
     return true
   }
 

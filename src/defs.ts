@@ -3,9 +3,17 @@ export interface TraitCategory {
   items: Trait[]
 }
 
+// type IncompatibleTrait = {}
+// export interface IncompatibleTrait: string | string[]
+
+export interface Incompatible {
+  [key: string]: string | string[]
+}
+
 export interface Trait {
   name: string
   weight: number
+  incompatible?: Incompatible
 }
 
 export interface Attribute {
