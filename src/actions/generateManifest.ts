@@ -6,14 +6,15 @@ import {
   resolveConfiguration,
 } from '../util'
 import { find, shuffle, sumBy, times } from 'lodash'
-import { Image, Trait, TraitCategory } from '../defs'
+import { Incompatible, Image, Trait, TraitCategory } from '../defs'
 
 let imageData: any = []
 let attempts = 0
-let { maxAttempts: maxNumberOfAttempts } = resolveConfiguration()
+let maxNumberOfAttempts = 0
 
 export default function () {
-  const { uniques, editionSize } = resolveConfiguration()
+  const { maxAttempts, uniques, editionSize } = resolveConfiguration()
+  maxNumberOfAttempts = maxAttempts
 
   prepareOutputFolder()
 
