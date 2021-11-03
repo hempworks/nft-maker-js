@@ -2,7 +2,7 @@ import { Attribute } from '../defs'
 import {
   resolveConfiguration,
   resolveManifest,
-  shouldIncludeTrait,
+  shouldIncludeTraitInMetadata,
 } from '../util'
 import fs from 'fs'
 import delay from 'delay'
@@ -69,7 +69,7 @@ export function createToken(number: number, item: Attribute, config: any) {
   }
 
   Object.keys(item).forEach((k: string) => {
-    if (shouldIncludeTrait(k)) {
+    if (shouldIncludeTraitInMetadata(k)) {
       // @ts-ignore
       token['attributes'].push({ trait_type: k, value: item[k] })
     }

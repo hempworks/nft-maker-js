@@ -1,11 +1,6 @@
 import sharp from 'sharp'
-import {
-  resolveConfiguration,
-  resolveManifest,
-  shouldIncludeTrait,
-} from '../util'
+import { fail, getSingleTraitConfiguration, resolveManifest } from '../util'
 import path from 'path'
-import { fail } from '../util'
 
 function createImage() {
   return sharp({
@@ -21,16 +16,24 @@ function createImage() {
 function compositeImage(image: sharp.Sharp, item: any) {
   image.composite(
     Object.keys(item)
-      .filter((key: string) => key !== 'tokenId')
+      .filter((key: string) => shouldOutputTrait(key))
       .map((key: string) => {
-        const inputPath = `./traits/${key}/${item[key]}.png`
+        const pathSegments = `./traits/${key}/${item[key]}.png`
 
         return {
-          input: path.resolve(inputPath),
+          input: path.resolve(pathSegments),
           gravity: 'center',
         }
       })
   )
+}
+
+function shouldOutputTrait(trait: string) {
+  if (trait == 'tokenId') {
+    return false
+  }
+
+  return !getSingleTraitConfiguration(trait).options?.metadataOnly
 }
 
 interface Whatever {

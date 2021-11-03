@@ -36,22 +36,26 @@ export function resolveManifest() {
   fail('Could not find the project manifest.')
 }
 
-export function shouldIncludeTrait(trait: string) {
+export function getSingleTraitConfiguration(trait: string) {
   const { traits } = resolveConfiguration()
 
-  if (['tokenId'].includes(trait)) return false
+  return traits.filter((t: TraitCategory) => t.name === trait)[0]
+}
 
-  const included = traits.map((t: TraitCategory) => t.name).includes(trait)
+export function shouldIncludeTraitInMetadata(trait: string) {
+  const { order } = resolveConfiguration()
 
-  let traitConfig = traits.filter((t: TraitCategory) => t.name === trait)[0]
+  if (trait == 'tokenId') return false
 
-  if (!traitConfig.hasOwnProperty('options')) {
-    traitConfig.options = {}
+  const foundInOrderConfig = order.includes(trait)
+
+  const singleTrait = getSingleTraitConfiguration(trait)
+
+  if (foundInOrderConfig) {
+    if (singleTrait.options?.metadatOnly !== undefined) {
+      return singleTrait.options?.metadataOnly
+    }
+
+    return true
   }
-
-  if (!traitConfig.options.hasOwnProperty('exclude')) {
-    traitConfig.options.exclude = false
-  }
-
-  return included && !traitConfig.options.exclude
 }

@@ -1,7 +1,7 @@
 import {
   resolveConfiguration,
   resolveManifest,
-  shouldIncludeTrait,
+  shouldIncludeTraitInMetadata,
 } from '../util'
 import { Trait, TraitCategory } from '../defs'
 import fs from 'fs'
@@ -34,7 +34,7 @@ export default function () {
 
   manifest.forEach((item: object) => {
     Object.entries(item).forEach(value => {
-      if (shouldIncludeTrait(value[0])) {
+      if (shouldIncludeTraitInMetadata(value[0])) {
         counts[value[0]][value[1]]++
       }
     })

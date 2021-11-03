@@ -1,5 +1,10 @@
 import fs from 'fs'
-import { dd, fail, resolveConfiguration } from '../util'
+import {
+  dd,
+  fail,
+  getSingleTraitConfiguration,
+  resolveConfiguration,
+} from '../util'
 import { find, shuffle, sumBy, times } from 'lodash'
 import { Image, Trait, TraitCategory } from '../defs'
 
@@ -80,12 +85,16 @@ export function getRandomWeightedTrait(trait: string, existing: Image): string {
 
   // Find compatible category trait items for the existing object
   // If it's the first time to find a trait we'll just grab
-  // whichever one we want, since there's nothing to check.
+  // whichever one we want since there's nothing to check.
   let items: Trait[] = category.items
 
   items = items.filter((trait: Trait) => {
-    return traitIsCompatibleWithCurrentImage(trait, existing)
+    return traitIsCompatibleWithCurrentImage(category, trait, existing)
   })
+
+  if (items.length == 0) {
+    fail(`There are no compatible traits for ${trait}`)
+  }
 
   let sum = sumBy(category.items, (i: Trait) => i.weight)
   const threshold = Math.random() * sum
@@ -102,6 +111,20 @@ export function getRandomWeightedTrait(trait: string, existing: Image): string {
   return items[items.length - 1].name
 }
 
+export function traitIsCompatibleWithCurrentImage(
+  category: TraitCategory,
+  maybeTrait: Trait,
+  existing: Image
+): boolean {
+  if (Object.keys(existing).length === 0) {
+    return true
+  }
+
+  // maybeTrait.name
+  // TODO
+  return true
+}
+
 export function validUnique(unique: Image) {
   const { traits } = resolveConfiguration()
   const traitKeys = traits.map((t: TraitCategory) => t.name)
@@ -111,18 +134,6 @@ export function validUnique(unique: Image) {
       fail(`Invalid unique: ${trait}`)
     }
   })
-
-  return true
-}
-
-export function traitIsCompatibleWithCurrentImage(
-  trait: Trait,
-  existing: Image
-): boolean {
-  if (Object.keys(existing).length > 0) {
-    dd(trait, existing)
-    return true
-  }
 
   return true
 }
