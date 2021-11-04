@@ -1,6 +1,7 @@
 import sharp from 'sharp'
 import { fail, getSingleTraitConfiguration, resolveManifest } from '../util'
 import path from 'path'
+import { Task, ImageDefinition } from '../defs'
 
 function createImage() {
   return sharp({
@@ -13,12 +14,14 @@ function createImage() {
   })
 }
 
-function compositeImage(image: sharp.Sharp, item: any) {
+function compositeImage(image: sharp.Sharp, item: ImageDefinition) {
   image.composite(
     Object.keys(item)
       .filter((key: string) => shouldOutputTrait(key))
       .map((key: string) => {
-        const pathSegments = `./traits/${key}/${item[key]}.png`
+        // @ts-ignore
+        const fileName = item[key].image || item[key].name
+        const pathSegments = `./traits/${key}/${fileName}.png`
 
         return {
           input: path.resolve(pathSegments),
@@ -36,18 +39,12 @@ function shouldOutputTrait(trait: string) {
   return !getSingleTraitConfiguration(trait).options?.metadataOnly
 }
 
-interface Whatever {
-  title: string
-  output: string
-}
-
-export default async function (task: null | Whatever): Promise<void> {
+export default async function (task: null | Task): Promise<void> {
   const manifest = resolveManifest()
 
   for (const item of manifest) {
     const key: number = manifest.indexOf(item)
     const filePath = path.resolve(`./assets/${key}.png`)
-
     if (task) task.output = `Creating image at '${filePath}'`
 
     const image = createImage()

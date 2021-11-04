@@ -42,6 +42,17 @@ export function getSingleTraitConfiguration(trait: string) {
   return traits.filter((t: TraitCategory) => t.name === trait)[0]
 }
 
+export function getSingleTraitItemConfiguration(
+  category: string,
+  itemName: string
+) {
+  let itemConfig = getSingleTraitConfiguration(category)
+
+  return itemConfig.items.filter((itemConfigItem: { name: string }) => {
+    return itemConfigItem.name == itemName
+  })[0]
+}
+
 export function shouldIncludeTraitInMetadata(trait: string) {
   const { order } = resolveConfiguration()
 

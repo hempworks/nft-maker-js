@@ -9,13 +9,15 @@ import fs from 'fs'
 export default function () {
   const config = resolveConfiguration()
   const manifest = resolveManifest()
-  const { traits: t } = config
+  const { order, traits: t } = config
   const categories: Array<TraitCategory> = t
 
-  let counts = categories
-    .map((cat: TraitCategory) => {
+  let counts = order
+    .map((cat: string) => {
+      const category: TraitCategory = categories.filter(c => c.name == cat)[0]
+
       return {
-        [cat.name]: cat.items
+        [cat]: category.items
           .map((trait: Trait) => ({ [trait.name]: 0 }))
           .reduce((carry, trait) => {
             return {
@@ -25,12 +27,12 @@ export default function () {
           }, {}),
       }
     })
-    .reduce((carry, poop) => {
+    .reduce((carry: object, poop: object) => {
       return {
         ...carry,
         ...poop,
       }
-    })
+    }, {})
 
   manifest.forEach((item: object) => {
     Object.entries(item).forEach(value => {

@@ -71,7 +71,7 @@ export function createToken(number: number, item: Attribute, config: any) {
   Object.keys(item).forEach((k: string) => {
     if (shouldIncludeTraitInMetadata(k)) {
       // @ts-ignore
-      token['attributes'].push({ trait_type: k, value: item[k] })
+      token['attributes'].push({ trait_type: k, value: item[k].name })
     }
   })
 

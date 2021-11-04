@@ -13,7 +13,9 @@ export const desc: string = 'Run the generator'
 const tasks = new Listr([
   {
     title: 'Generate Manifest',
-    task: generateManifest,
+    task: async (ctx, task): Promise<void> => {
+      await generateManifest(task)
+    },
   },
   {
     title: 'Generate Stats',

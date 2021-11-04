@@ -3,6 +3,11 @@ export interface TraitCategory {
   items: Trait[]
 }
 
+export interface ImageDefinition {
+  name: string
+  image?: string
+}
+
 // type IncompatibleTrait = {}
 // export interface IncompatibleTrait: string | string[]
 
@@ -12,8 +17,9 @@ export interface Incompatible {
 
 export interface Trait {
   name: string
+  image?: string
   weight: number
-  incompatible?: Incompatible
+  conflicts?(name: string, value: string): boolean
 }
 
 export interface Attribute {
@@ -21,5 +27,10 @@ export interface Attribute {
 }
 
 export interface Image {
-  [name: string]: string | number
+  [key: string]: string | number
+}
+
+export interface Task {
+  title: string
+  output: string
 }
