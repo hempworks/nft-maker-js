@@ -6,7 +6,7 @@ import {
   resolveManifest,
 } from '../util'
 import path from 'path'
-import { Task, ImageDefinition } from '../defs'
+import { ImageDefinition, Task } from '../defs'
 
 async function createImage() {
   return await sharp({
@@ -62,14 +62,14 @@ export default async function (task: null | Task): Promise<void> {
 
     const { imageOptions } = resolveConfiguration()
 
-    if (imageOptions !== undefined) {
-      Object.keys(imageOptions).forEach(option => {
-        let gen = async () => {
+    if (imageOptions) {
+      image = await Object.keys(imageOptions).reduce(
+        async (carry: any, option) => {
           // @ts-ignore
           return await sharp(image)[option](imageOptions[option]).toBuffer()
-        }
-        image = gen()
-      })
+        },
+        []
+      )
     }
 
     try {

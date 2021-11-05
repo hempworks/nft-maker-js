@@ -34,3 +34,11 @@ export interface Task {
   title: string
   output: string
 }
+
+export interface Count {
+  [key: string]: CountCategory
+}
+
+export interface CountCategory {
+  [key: string | number]: number
+}

@@ -7,7 +7,7 @@ import {
 import { find, shuffle, sumBy, times, isEqual } from 'lodash'
 import { Image, ImageDefinition, Task, Trait, TraitCategory } from '../defs'
 
-let imageData: any = []
+let imageData: Image[] = []
 let attempts = 0
 let maxNumberOfAttempts = 0
 
@@ -35,15 +35,17 @@ export default async function (task: null | Task): Promise<void> {
   })
 
   imageData = shuffle(imageData)
-
-  // Assign token IDs...
-  imageData = imageData.map((item: any, key: number) => {
-    item['tokenId'] = key + 1
-    return item
-  })
+  imageData = assignTokenIds(imageData)
 
   fs.writeFileSync('./manifest.json', JSON.stringify(imageData, null, 2), {
     flag: 'w',
+  })
+}
+
+function assignTokenIds(imageData: Image[]) {
+  return imageData.map((item: any, key: number) => {
+    item['tokenId'] = key + 1
+    return item
   })
 }
 
@@ -55,7 +57,7 @@ function prepareOutputFolder() {
   }
 }
 
-export function createNewUniqueImage(): object {
+export function createNewUniqueImage(): Image {
   let newImage = createNewImage()
 
   if (duplicateFound(imageData, newImage)) {
@@ -208,11 +210,10 @@ export function traitIsCompatibleWithCurrentImage(
 }
 
 export function validUnique(unique: Image) {
-  const { traits } = resolveConfiguration()
-  const traitKeys = traits.map((t: TraitCategory) => t.name)
+  const { order } = resolveConfiguration()
 
   Object.keys(unique).forEach(trait => {
-    if (!traitKeys.includes(trait)) {
+    if (!order.includes(trait)) {
       fail(`Invalid unique: ${trait}`)
     }
   })
