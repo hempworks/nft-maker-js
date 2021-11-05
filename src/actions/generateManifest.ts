@@ -58,12 +58,12 @@ function prepareOutputFolder() {
 export function createNewUniqueImage(): object {
   let newImage = createNewImage()
 
-  if (!duplicateFound(imageData, newImage)) {
-    attempts = 0
-    return newImage
+  if (duplicateFound(imageData, newImage)) {
+    return createNewUniqueImage()
   }
 
-  return createNewUniqueImage()
+  attempts = 0
+  return newImage
 }
 
 function duplicateFound(imageData: Image[], newImage: Image): boolean {
