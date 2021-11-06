@@ -1,18 +1,20 @@
 import sharp from 'sharp'
 import {
   fail,
-  getSingleTraitConfiguration,
   resolveConfiguration,
   resolveManifest,
+  shouldOutputTrait,
 } from '../util'
 import path from 'path'
 import { ImageDefinition, Task } from '../defs'
 
 async function createImage() {
+  const { size } = resolveConfiguration()
+
   return await sharp({
     create: {
-      width: 2000,
-      height: 2000,
+      width: size.width,
+      height: size.height,
       channels: 4,
       background: { r: 255, g: 255, b: 255, alpha: 0 },
     },
@@ -38,14 +40,6 @@ async function compositeImage(image: any, item: ImageDefinition) {
         })
     )
     .toBuffer()
-}
-
-function shouldOutputTrait(trait: string) {
-  if (trait == 'tokenId') {
-    return false
-  }
-
-  return !getSingleTraitConfiguration(trait).options?.metadataOnly
 }
 
 export default async function (task: null | Task): Promise<void> {

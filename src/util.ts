@@ -74,3 +74,13 @@ export function shouldIncludeTraitInMetadata(trait: string) {
     return true
   }
 }
+
+export function shouldOutputTrait(trait: string) {
+  if (trait == 'tokenId') {
+    return false
+  }
+
+  const singleTrait = getSingleTraitConfiguration(trait)
+
+  return singleTrait.options?.metadataOnly
+}

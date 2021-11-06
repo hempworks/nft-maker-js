@@ -1,11 +1,15 @@
 module.exports = {
   editionSize: 10,
-  maxAttempts: 400,
+  maxAttempts: 5,
   name: 'Solana Project Name',
   description: 'Your description goes here',
   collection: {
     name: 'Solana Project Name (1st Edition)',
     family: 'Solana Project Name',
+  },
+  size: {
+    width: 2000,
+    height: 2000,
   },
   sellerFeeBasisPoints: 500,
   creators: [
