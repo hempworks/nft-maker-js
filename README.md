@@ -14,6 +14,8 @@ package offers a few unique features not currently implemented:
 - The ability to define trait layers but have them excluded from
   the final JSON metadata. This is good for layers that are not
   unique between individual NFTs.
+- The ability to have traits which are not visible and only
+  included in the metadata.
 - The ability to define incompatible layers (e.g. This type of
   mouth doesn't work with this beard).
 
