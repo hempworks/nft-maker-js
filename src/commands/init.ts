@@ -92,8 +92,8 @@ function getTasks(force: boolean) {
 
             stub.uniques = [
               {
-                Background: 'Black',
-                Foreground: 'White',
+                Background: { name: 'Black' },
+                Foreground: { name: 'White' },
               },
             ]
 
