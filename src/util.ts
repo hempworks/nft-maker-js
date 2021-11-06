@@ -63,6 +63,10 @@ export function shouldIncludeTraitInMetadata(trait: string) {
   const singleTrait = getSingleTraitConfiguration(trait)
 
   if (foundInOrderConfig) {
+    if (singleTrait.options?.exclude !== undefined) {
+      return !singleTrait.options?.exclude
+    }
+
     if (singleTrait.options?.metadatOnly !== undefined) {
       return singleTrait.options?.metadataOnly
     }
