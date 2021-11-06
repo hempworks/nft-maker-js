@@ -143,7 +143,7 @@ file:
 
 Your project's traits are probably required to be in a certain
 order to make sense. You can adjust the order of the layers, by
-filling out the `order` key inside your configuration:
+filling in the `order` array inside your configuration:
 
 ```js
 module.exports = {
@@ -155,12 +155,12 @@ module.exports = {
 
 ### Specifying incompatibilities
 
-Some individual trait items may not be comptatible visually with
+Some individual trait items may not be compatible visually with
 another trait item. For example, you may have a "Mouth"
 item that doesn't work with a certain "Beard" item. You can
 configure which items are incompatible with each by using
-the `incompatible` key, passing in an object of trait and their
-array of incompatible values:
+the `conflicts` key, which takes a closure that returns whether
+the individual trait is conflicting:
 
 ```js
 module.exports = {
@@ -171,9 +171,8 @@ module.exports = {
       items: [
         {
           name: 'Soul Patch', weight: 10,
-          incompatible: {
-            Mouth: ['Derp', 'Toothy Grin'],
-          }
+          conflicts: (traitName, traitValue) => ['Derp',
+            'Toothy Grin'].includes(traitValue),
         },
       ],
     },
@@ -197,7 +196,7 @@ specify an `options` key to the trait to mark it as excluded:
 
 ```js
 module.exports = {
-//...
+  //...
   traits: [
     {
       name: 'Outline',
@@ -209,26 +208,59 @@ module.exports = {
       }
     }
   ]
+  //...
 }
+```
+
+### Metadata Only Traits
+
+Some traits are not represented in your images visually but
+should still be included in the JSON metadata. For example, your
+project may have traits with a specific
+"gender", or  "favorite rapper". You can specify a trait as
+`metadataOnly` to prevent NFT Maker from trying to find a layer
+for it, but still including the attribute in the output.
+
+```js
+module.exports = {
+  //...
+  traits: [
+    {
+      name: 'Gender',
+      items: [
+        { name: 'Male', weight: 5, },
+        { name: 'Female', weight: 5, },
+        { name: 'Non-binary', weight: 5 },
+        { name: 'Other', weight: 5 },
+      ],
+      options: {
+        metadataOnly: true,
+      },
+    },
+  ],
+  //...
+}
+
 ```
 
 ### Generating Unique 1/1 Images (Uniques)
 
-Every project tends to need some, special, ultra-rare images.
-You can have NFT Maker generate these "uniques" and include them
-in your drop. Just specify the specific attributes and their
-special values in the `uniques` key of your configuration:
+Every project tends to need some, special, 1/1, ultra-rare
+images. You can have NFT Maker generate these "uniques" and
+include them in a random position in your drop. Just specify the
+specific attributes and their special values in the `uniques`
+key of your configuration:
 
 ```js
 module.exports = {
   //...
   uniques: [
     {
-      Background: 'Midnight',
-      Face: 'Iridescent',
-      Eyes: 'Laser',
-      Hair: 'Lightning'
-    }
+      Background: { name: 'Midnight' },
+      Face: { name: 'Iridescent' },
+      Eyes: { name: 'Laser' },
+      Hair: { name: 'Lightning' },
+    },
   ],
   //...
 }
