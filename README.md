@@ -94,6 +94,10 @@ module.exports = {
     name: 'Solana Project Name (1st Edition)',
     family: 'Solana Project Name',
   },
+  size: {
+    height: 2000,
+    width: 2000,
+  },
   sellerFeeBasisPoints: 500,
   creators: [
     {
