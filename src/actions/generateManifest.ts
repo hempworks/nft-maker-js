@@ -1,5 +1,6 @@
 import fs from 'fs'
 import {
+  dd,
   fail,
   getSingleTraitItemConfiguration,
   resolveConfiguration,
@@ -117,24 +118,22 @@ export function getRandomWeightedTrait(
     )
   }
 
-  let sum = sumBy(category.items, (i: Trait) => i.weight)
-  const threshold = Math.random() * sum
+  shuffle(items)
 
-  let total = 0
-  for (let i = 0; i < items.length; i++) {
-    total += items[i].weight
+  let choices = items.reduce((carry: any, item, key) => {
+    return carry.concat(new Array(item.weight).fill(key))
+  }, [])
 
-    if (total >= threshold) {
-      return {
-        name: items[i].name,
-        image: items[i].image || items[i].name,
-      }
-    }
-  }
+  // Shuffle the choices
+  shuffle(choices)
+
+  // Pull a random
+  let choice = Math.floor(Math.random() * (choices.length - 1))
+  let index = choices[choice]
 
   return {
-    name: items[items.length - 1].name,
-    image: items[items.length - 1].image || items[items.length - 1].name,
+    name: items[index].name,
+    image: items[index].image || items[index].name,
   }
 }
 
@@ -147,11 +146,6 @@ export function traitIsCompatibleWithCurrentImage(
   if (Object.keys(existing).length === 0) {
     return true
   }
-
-  // Check if this trait, which is one of the options we'll randomly select from,
-  // is compatible with the existing trait values. We'll do this by running
-  // this prospective trait item's conflict closure against the existing image's
-  // trait key and value pairs
 
   // Backwards Check
   const closure = maybeTrait.conflicts
@@ -173,14 +167,6 @@ export function traitIsCompatibleWithCurrentImage(
     )
   }
 
-  // Forward Check
-  // for every trait that already exists,
-  // if it has a conflict definition,
-  // pass this new trait/value into that and if it fails, return false
-  // foreach trait
-  // if has conflict definition
-  // pass this new trait/value into conflict()
-  // return false if fails
   const forwards = Object.keys(existing).reduce(
     (carry: boolean, existingVal: string): boolean => {
       let singleItem = getSingleTraitItemConfiguration(
