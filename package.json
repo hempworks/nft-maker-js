@@ -1,6 +1,6 @@
 {
   "name": "@hempworks/nftmaker",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "main": "build/index.js",
   "license": "WTFPL",
   "bin": {
