@@ -64,11 +64,7 @@ export function shouldIncludeTraitInMetadata(trait: string) {
 
   if (foundInOrderConfig) {
     if (singleTrait.options?.exclude !== undefined) {
-      return !singleTrait.options?.exclude
-    }
-
-    if (singleTrait.options?.metadatOnly !== undefined) {
-      return singleTrait.options?.metadataOnly
+      return !singleTrait.options.exclude
     }
 
     return true
@@ -76,11 +72,17 @@ export function shouldIncludeTraitInMetadata(trait: string) {
 }
 
 export function shouldOutputTrait(trait: string) {
-  if (trait == 'tokenId') {
-    return false
-  }
+  if (trait == 'tokenId') return false
 
+  const { order } = resolveConfiguration()
+  const foundInOrderConfig = order.includes(trait)
   const singleTrait = getSingleTraitConfiguration(trait)
 
-  return singleTrait.options?.metadataOnly
+  if (foundInOrderConfig) {
+    if (singleTrait.options?.metadataOnly !== undefined) {
+      return !singleTrait.options.metadataOnly
+    }
+
+    return true
+  }
 }

@@ -42,3 +42,20 @@ export interface Count {
 export interface CountCategory {
   [key: string | number]: number
 }
+
+interface Creator {
+  address: string
+  share: number
+}
+
+export interface Token {
+  name: string
+  symbol: string
+  description: string
+  sellerFeeBasisPoints: number
+  collection: {
+    name: string
+    family: string
+  }
+  creators: Creator[]
+}

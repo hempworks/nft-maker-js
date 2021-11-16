@@ -33,10 +33,7 @@ async function compositeImage(image: any, item: ImageDefinition) {
           const fileName = item[key].image || item[key].name
           const pathSegments = `./traits/${key}/${fileName}.png`
 
-          return {
-            input: path.resolve(pathSegments),
-            gravity: 'center',
-          }
+          return { input: path.resolve(pathSegments), gravity: 'center' }
         })
     )
     .toBuffer()

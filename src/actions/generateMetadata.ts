@@ -1,4 +1,4 @@
-import { Attribute } from '../defs'
+import { Attribute, Token } from '../defs'
 import {
   resolveConfiguration,
   resolveManifest,
@@ -43,7 +43,7 @@ export default async function (
   }
 }
 
-export function createToken(number: number, item: Attribute, config: any) {
+export function createToken(number: number, item: Attribute, config: Token) {
   const token = {
     name: `${config.name} #${number}`,
     symbol: config.symbol ?? '',
@@ -71,7 +71,7 @@ export function createToken(number: number, item: Attribute, config: any) {
   Object.keys(item).forEach((k: string) => {
     if (shouldIncludeTraitInMetadata(k)) {
       // @ts-ignore
-      token['attributes'].push({ trait_type: k, value: item[k].name })
+      token['attributes'].push({ trait_type: k, value: item[k].name as string })
     }
   })
 
