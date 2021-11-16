@@ -6,7 +6,6 @@ import { Arguments, CommandBuilder } from 'yargs'
 
 export const command: string = 'init'
 
-// @ts-ignore
 export const desc: string =
   'Initialize a configuration file based on the traits folder'
 
@@ -14,8 +13,7 @@ type Options = {
   force: boolean
 }
 
-// @ts-ignore
-export const builder: CommandBuilder<Options> = yargs => {
+export const builder: CommandBuilder<Options> = yargs =>
   yargs.option('force', {
     alias: 'f',
     demandOption: true,
@@ -23,11 +21,7 @@ export const builder: CommandBuilder<Options> = yargs => {
     type: 'boolean',
     describe: 'Force creation of the configuration file',
   })
-}
 
-enum TraitStrategy {}
-
-// @ts-ignore
 function getTasks(force: boolean) {
   return new Listr(
     [

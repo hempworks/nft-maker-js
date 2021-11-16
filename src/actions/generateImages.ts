@@ -6,9 +6,9 @@ import {
   shouldOutputTrait,
 } from '../util'
 import path from 'path'
-import { ImageDefinition, Task } from '../defs'
+import { ManifestItem, Task } from '../defs'
 
-async function createImage() {
+async function createImage(): Promise<Buffer> {
   const { size } = resolveConfiguration()
 
   return await sharp({
@@ -23,13 +23,15 @@ async function createImage() {
     .toBuffer()
 }
 
-async function compositeImage(image: any, item: ImageDefinition) {
+async function compositeImage(
+  image: Buffer,
+  item: ManifestItem
+): Promise<Buffer> {
   return await sharp(image)
     .composite(
       Object.keys(item)
         .filter((key: string) => shouldOutputTrait(key))
         .map((key: string) => {
-          // @ts-ignore
           const fileName = item[key].image || item[key].name
           const pathSegments = `./traits/${key}/${fileName}.png`
 
@@ -44,10 +46,10 @@ export default async function (task: null | Task): Promise<void> {
 
   for (const item of manifest) {
     const key: number = manifest.indexOf(item)
-    const filePath = path.resolve(`./assets/${key}.png`)
+    const filePath: string = path.resolve(`./assets/${key}.png`)
     if (task) task.output = `Creating image at '${filePath}'`
 
-    let image = await createImage()
+    let image: Buffer = await createImage()
 
     image = await compositeImage(image, item)
 

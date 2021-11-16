@@ -225,7 +225,7 @@ should still be included in the JSON metadata. For example, your
 project may have traits with a specific
 "gender", or  "favorite rapper". You can specify a trait as
 `metadataOnly` to prevent NFT Maker from trying to find a layer
-for it, but still including the attribute in the output.
+for it, but still include the attribute in the output.
 
 ```js
 module.exports = {
@@ -251,7 +251,7 @@ module.exports = {
 
 ### Generating Unique 1/1 Images (Uniques)
 
-Every project tends to need some, special, 1/1, ultra-rare
+Every project tends to need some special, 1/1, ultra-rare
 images. You can have NFT Maker generate these "uniques" and
 include them in a random position in your drop. Just specify the
 specific attributes and their special values in the `uniques`

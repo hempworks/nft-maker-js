@@ -3,16 +3,13 @@ export interface TraitCategory {
   items: Trait[]
 }
 
-export interface ImageDefinition {
-  name: string
-  image?: string
+export interface ManifestItem {
+  [trait: string]: ImageDefinition
 }
 
-// type IncompatibleTrait = {}
-// export interface IncompatibleTrait: string | string[]
-
-export interface Incompatible {
-  [key: string]: string | string[]
+export interface ImageDefinition {
+  name: string
+  image: string
 }
 
 export interface Trait {
