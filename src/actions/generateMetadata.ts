@@ -57,6 +57,8 @@ export function createToken(number: number, item: Attribute, config: Token) {
       family: config.collection.family,
     },
     properties: {
+      category: 'image',
+      creators: config.creators,
       files: [
         {
           uri: 'image.png',
@@ -64,8 +66,6 @@ export function createToken(number: number, item: Attribute, config: Token) {
         },
       ],
     },
-    category: 'image',
-    creators: config.creators,
   }
 
   Object.keys(item).forEach((k: string) => {
