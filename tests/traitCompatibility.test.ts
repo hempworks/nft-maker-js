@@ -1,79 +1,98 @@
+import fs from 'fs'
+import { generateManifest } from '../src/actions'
+import { getTraitItemConfiguration, resolveConfiguration } from '../src/util'
 import { traitIsCompatibleWithCurrentImage } from '../src/actions/generateManifest'
-import { resolveConfiguration } from '../src/util'
+import { ManifestItem, TraitCategoryConfiguration, TraitItem } from '../src/defs'
 
+jest.mock('fs')
 jest.mock('../src/util')
-
-const testConfig = {
-  name: 'Hemp',
-  description: 'Sexy NFTs',
-  maxAttempts: 40,
-  sellerFeeBasisPoints: 500,
-  creators: [
-    {
-      address: '1234567890',
-      share: 100,
-    },
-  ],
-  collection: {
-    name: 'Hemp (1st Edition)',
-    family: 'Hemp',
-  },
-  traits: [
-    {
-      name: 'Background',
-      items: [
-        { name: 'Midnight', weight: 20 }, // Not compatible
-        { name: 'Blue', weight: 20 }, // Compatible
-      ],
-    },
-
-    {
-      name: 'Foreground',
-      items: [
-        { name: 'Red', weight: 20, incompatible: { Background: ['Midnight'] } },
-        { name: 'White', weight: 20 },
-      ],
-    },
-  ],
-}
-const { traits } = testConfig
 
 describe('traitIsCompatibleWithCurrentImage', () => {
   it('confirms a proposed trait is compatible', async () => {
-    const resolveConfigMock = <jest.Mock<typeof resolveConfiguration>>(
-      resolveConfiguration
-    )
+    // const resolveConfigMock = <jest.MockedFunction<typeof resolveConfiguration>>resolveConfiguration
+    //
+    // resolveConfigMock.mockImplementation(() => ({
+    //   collection: {
+    //     name: 'Hemp',
+    //     family: 'Hemp',
+    //   },
+    //   creators: [
+    //     {
+    //       address: '12345',
+    //       share: 100,
+    //     },
+    //   ],
+    //   description: '',
+    //   name: '',
+    //   sellerFeeBasisPoints: 0,
+    //   size: {
+    //     width: 400,
+    //     height: 400,
+    //   },
+    //   editionSize: 200,
+    //   uniques: [],
+    //   order: ['Background', 'Foreground'],
+    //   traits: [
+    //     { name: 'Background', items: [{ name: 'Black', weight: 1 }] },
+    //     { name: 'Foreground', items: [{ name: 'White', weight: 1 }] },
+    //   ],
+    // }))
 
-    resolveConfigMock.mockReturnValue(testConfig as any)
+    // const getTraitItemConfigMock = <jest.MockedFunction<typeof getTraitItemConfiguration>>getTraitItemConfiguration
 
-    let existing = {
-      Background: 'Midnight',
+    // let getSingleTraitItemConfigurationMockResult = {
+    //   name: 'Background',
+    //   weight: 1,
+    //   items: [{ name: 'Black' }],
+    //   conflicts: () => false,
+    // }
+    //
+    // const testConfig = {
+    //   traits: [
+    //     getSingleTraitItemConfigurationMockResult,
+    //     {
+    //       name: 'Foreground',
+    //       weight: 1,
+    //       items: [{ name: 'White', conflicts: () => false }],
+    //     },
+    //   ],
+    // }
+    //
+    // resolveConfigMock.mockReturnValue(testConfig as any)
+    // getTraitItemConfigMock.mockReturnValue(getSingleTraitItemConfigurationMockResult as any)
+
+    let backgroundCategory: TraitCategoryConfiguration = {
+      name: 'Background',
+      items: [{ name: 'Black', weight: 1 }],
     }
 
-    let result = traitIsCompatibleWithCurrentImage(
-      { name: 'Red', weight: 10, incompatible: { Background: ['Midnight'] } },
-      existing
-    )
+    let maybeTrait: TraitItem = { name: 'White', weight: 1 }
+
+    let existingImage: ManifestItem = {
+      Background: { name: 'Black', image: 'Black' },
+    }
+
+    let result = traitIsCompatibleWithCurrentImage(backgroundCategory, maybeTrait, existingImage)
 
     expect(result).toBe(true)
   })
 
-  it('confirms a proposed trait is incompatible', async () => {
-    const resolveConfigMock = <jest.Mock<typeof resolveConfiguration>>(
-      resolveConfiguration
-    )
+  it('confirms a proposed trait is backwards incompatible', () => {
+    let backgroundCategory: TraitCategoryConfiguration = { name: 'Background', items: [{ name: 'Black', weight: 1 }] }
+    let maybeTrait: TraitItem = { name: 'White', weight: 1, conflicts: () => true }
+    let existingImage: ManifestItem = { Background: { name: 'Black', image: 'Black' } }
 
-    resolveConfigMock.mockReturnValue(testConfig as any)
+    expect(traitIsCompatibleWithCurrentImage(backgroundCategory, maybeTrait, existingImage)).toBe(false)
+  })
 
-    let existing = {
-      Background: 'Midnight',
+  it('confirms a proposed trait is forwards incompatible', () => {
+    let backgroundCategory: TraitCategoryConfiguration = {
+      name: 'Background',
+      items: [{ name: 'Black', weight: 1, conflicts: () => true }],
     }
+    let maybeTrait: TraitItem = { name: 'White', weight: 1 }
+    let existingImage: ManifestItem = { Background: { name: 'Black', image: 'Black' } }
 
-    let result = traitIsCompatibleWithCurrentImage(
-      { name: 'Red', weight: 10, incompatible: { Background: ['Midnight'] } },
-      existing
-    )
-
-    expect(result).toBe(false)
+    expect(traitIsCompatibleWithCurrentImage(backgroundCategory, maybeTrait, existingImage)).toBe(false)
   })
 })

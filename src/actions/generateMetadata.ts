@@ -1,19 +1,10 @@
-import { Attribute, Token } from '../defs'
-import {
-  resolveConfiguration,
-  resolveManifest,
-  shouldIncludeTraitInMetadata,
-} from '../util'
+import { Attribute, ProjectConfiguration, Task, Token } from '../defs'
+import { resolveConfiguration, resolveManifest, shouldIncludeTraitInMetadata } from '../util'
 import fs from 'fs'
 import delay from 'delay'
 import { tap } from 'lodash'
 
-export default async function (
-  task: null | {
-    output: string
-    title: string
-  }
-): Promise<void> {
+export default async function (task: null | Task): Promise<void> {
   const manifest = resolveManifest()
   const config = resolveConfiguration()
 
@@ -43,7 +34,7 @@ export default async function (
   }
 }
 
-export function createToken(number: number, item: Attribute, config: Token) {
+export function createToken(number: number, item: Attribute, config: ProjectConfiguration): Token {
   const token = {
     name: `${config.name} #${number}`,
     symbol: config.symbol ?? '',

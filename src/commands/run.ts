@@ -1,11 +1,6 @@
 import { Listr } from 'listr2'
 
-import {
-  generateManifest,
-  generateStats,
-  generateMetadata,
-  generateImages,
-} from '../actions'
+import { generateManifest, generateStats, generateMetadata, generateImages } from '../actions'
 
 export const command: string = 'run'
 export const desc: string = 'Run the generator'
@@ -14,7 +9,7 @@ const tasks = new Listr([
   {
     title: 'Generate Manifest',
     task: async (ctx, task): Promise<void> => {
-      await generateManifest(task)
+      await generateManifest()
     },
   },
   {

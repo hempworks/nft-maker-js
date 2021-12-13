@@ -53,18 +53,6 @@ export default async function (task: null | Task): Promise<void> {
 
     image = await compositeImage(image, item)
 
-    const { imageOptions } = resolveConfiguration()
-
-    if (imageOptions) {
-      image = await Object.keys(imageOptions).reduce(
-        async (carry: any, option) => {
-          // @ts-ignore
-          return await sharp(image)[option](imageOptions[option]).toBuffer()
-        },
-        []
-      )
-    }
-
     try {
       await sharp(image).toFile(filePath)
     } catch (err: any) {

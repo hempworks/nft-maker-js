@@ -1,15 +1,10 @@
 import path from 'path'
 import fs from 'fs'
 import chalk from 'chalk'
-import { TraitCategory } from './defs'
+import { ProjectConfiguration, TraitItem, TraitCategoryConfiguration } from './defs'
 
 export function info(msg: string): any {
   return console.info(msg)
-}
-
-export function dd(...what: any[]) {
-  console.log(...what)
-  process.exit(1)
 }
 
 export function fail(msg: string) {
@@ -17,12 +12,14 @@ export function fail(msg: string) {
   process.exit(1)
 }
 
-export function resolveConfiguration() {
+export function resolveConfiguration(): ProjectConfiguration {
   let configLocation = path.resolve('./config.js')
 
-  return fs.existsSync(configLocation)
-    ? require(configLocation)
-    : fail('Could not find the project configuration.')
+  if (fs.existsSync(configLocation)) {
+    return require(configLocation)
+  }
+
+  throw Error(`Could not find the project configuration at: ${configLocation}`)
 }
 
 export function resolveManifest() {
@@ -36,21 +33,34 @@ export function resolveManifest() {
   fail('Could not find the project manifest.')
 }
 
-export function getSingleTraitConfiguration(trait: string) {
+export function getTraitCategoryConfiguration(trait: string) {
   const { traits } = resolveConfiguration()
 
-  return traits.filter((t: TraitCategory) => t.name === trait)[0]
+  const singleTraitConfig: TraitCategoryConfiguration = traits.filter(
+    (t: TraitCategoryConfiguration) => t.name === trait
+  )[0]
+
+  if (!singleTraitConfig) {
+    throw Error(`Could not find single trait configuration for: ${trait}`)
+  }
+
+  return singleTraitConfig
 }
 
-export function getSingleTraitItemConfiguration(
-  category: string,
-  itemName: string
-) {
-  let itemConfig = getSingleTraitConfiguration(category)
+export function getTraitItemConfiguration(category: string, itemName: string): TraitItem {
+  const itemConfig = getTraitCategoryConfiguration(category)
 
-  return itemConfig.items.filter((itemConfigItem: { name: string }) => {
+  console.log('poop', itemName, itemConfig.name)
+
+  const item = itemConfig.items.filter((itemConfigItem: { name: string }) => {
     return itemConfigItem.name == itemName
   })[0]
+
+  if (!item) {
+    throw Error(`Could not find single trait item configuration for: ${category}`)
+  }
+
+  return item
 }
 
 export function shouldIncludeTraitInMetadata(trait: string) {
@@ -60,7 +70,7 @@ export function shouldIncludeTraitInMetadata(trait: string) {
 
   const foundInOrderConfig = order.includes(trait)
 
-  const singleTrait = getSingleTraitConfiguration(trait)
+  const singleTrait = getTraitCategoryConfiguration(trait)
 
   if (foundInOrderConfig) {
     if (singleTrait.options?.exclude !== undefined) {
@@ -76,7 +86,7 @@ export function shouldOutputTrait(trait: string) {
 
   const { order } = resolveConfiguration()
   const foundInOrderConfig = order.includes(trait)
-  const singleTrait = getSingleTraitConfiguration(trait)
+  const singleTrait = getTraitCategoryConfiguration(trait)
 
   if (foundInOrderConfig) {
     if (singleTrait.options?.metadataOnly !== undefined) {

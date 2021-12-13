@@ -1,12 +1,12 @@
 import { resolveManifest, shouldIncludeTraitInMetadata } from '../util'
-import { Count } from '../defs'
+import { Count, ManifestItem } from '../defs'
 import fs from 'fs'
 
 export default function () {
   const manifest = resolveManifest()
   let counts: Count = {}
 
-  manifest.forEach((item: object) => {
+  manifest.forEach((item: ManifestItem) => {
     Object.entries(item).forEach(value => {
       const traitCategory = value[0]
       const traitItem = value[1]
