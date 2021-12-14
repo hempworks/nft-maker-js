@@ -1,5 +1,8 @@
 # NFT Maker
 
+If this package helps, please consider dropping some sweet, 
+sweet $SOL here: 2cmHgxJnfS33QYkxekNkZP6y2Njr8oG6ED5QqcktRASy ❤️
+
 This package generates images and JSON files for use with the
 Metaplex Candy Machine. It will take a folder of traits,
 randomly generate images based on weighting, and create the
